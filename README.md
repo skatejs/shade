@@ -5,11 +5,7 @@ Shade is a simple templating engine based on Shadow DOM concepts. It uses the sa
 
 ```js
 var listTemplate = shade(`
-  <h2>
-    <content name="title">
-      Default title
-    </content>
-  </h2>
+  <h2><content name="textContent">My todo list</content></h2>
   <ul>
     <content name="todos" select="li" multiple>
       <li><em>There are no todos yet.</li>
@@ -18,13 +14,25 @@ var listTemplate = shade(`
 `);
 
 var listItemTemplate = shade(`
-  <content></content>
+  <content name="textContent"></content>
   <button type="button">x</button>
 `);
 
-var div = document.createElement('div');
-listTemplate(div);
+listTemplate('<div></div>')
+  .todos
+  .append(listItemTemplate('<li>Todo 1</li>'));
+```
 
-div.title = 'My todo list';
-div.todos.append(listItemTemplate('<li></li>'));
+Produces:
+
+```html
+<div>
+  <h2>My todo list</h2>
+  <ul>
+    <li>
+      Todo 1
+      <button type="button">x</button>
+    </li>
+  </ul>
+</div>
 ```
