@@ -1,0 +1,35 @@
+{
+  "name": "shadejs",
+  "version": "0.0.0",
+  "description": "HTML Templating based on ShadowDOM concepts.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:skatejs/shadejs"
+  },
+  "keywords": [
+    "shadow",
+    "dom",
+    "html",
+    "template",
+    "templating",
+    "content",
+    "select",
+    "view",
+    "model"
+  ],
+  "author": "Trey Shugart <treshugart@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skatejs/shade/issues"
+  },
+  "homepage": "https://github.com/skatejs/shade",
+  "devDependencies": {
+    "chippy": "0.0.0",
+    "gulp": "^3.8.11",
+    "gulp-auto-task": "0.0.1"
+  }
+}
