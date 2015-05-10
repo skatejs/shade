@@ -338,7 +338,7 @@ __eef66f402a853f9ffff7cd32379113bb = (function () {
         var multiple = content.hasAttribute('multiple');
         var selector = content.getAttribute('select');
   
-        // Initial cration of document fragment.
+        // Initial creation of document fragment so that we can filter.
         if (typeof value === 'string') {
           value = _utilFragmentFromString2['default'](value);
         } else if (typeof value.length === 'number') {
