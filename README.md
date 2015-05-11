@@ -116,9 +116,9 @@ Returns the length of the collection.
 
 ### Methods
 
-#### `append (prettyMuchAnything)`
+#### `append (nodeNodesOrHtml)`
 
-Appends pretty much anything to the end of the collection.
+Appends a node, nodes or HTML to the end of the collection.
 
 #### `at`
 
@@ -140,21 +140,19 @@ Executes `fn` for each element in the collection passing in the node as the firs
 
 Returns the index of the specified node.
 
-#### `insert (nodes, at)`
+#### `insert (nodeNodesOrHtml, at)`
 
-Inserts pretty much anything at the specified index.
+Inserts a node, nodes or HTML at the specified index.
 
-#### `prepend (prettyMuchAnything)`
+#### `prepend (nodeNodesOrHtml)`
 
-Appends pretty much anything to the end of the collection.
+Appends a node, nodes or HTML to the collection.
 
-#### `remove (prettyMuchAnything)`
+#### `remove (nodeOrNodes)`
 
-Removes pretty much anything from the collection.
+Removes the node or nodes from the collection.
 
 ## Todo list example
-
-Take the following templates:
 
 ```js
 var todoList = shade(`
