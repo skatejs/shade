@@ -27,8 +27,8 @@ export default function (content) {
       return this.all.length;
     },
 
-    append: function (nodes) {
-      normalize(nodes).forEach(function (node) {
+    append: function (nodeNodesOrHtml) {
+      normalize(nodeNodesOrHtml).forEach(function (node) {
         var reference = content.__stopNode;
         reference.parentNode.insertBefore(node, reference);
       });
@@ -58,25 +58,29 @@ export default function (content) {
       return this.all.indexOf(item);
     },
 
-    insert: function (nodes, at) {
+    insert: function (nodeNodesOrHtml, at) {
       var that = this;
-      normalize(nodes).forEach(function (node, index) {
+      normalize(nodeNodesOrHtml).forEach(function (node, index) {
         var reference = that.at(at + index);
         reference.parentNode.insertBefore(node, reference);
       });
       return this;
     },
 
-    prepend: function (nodes) {
-      normalize(nodes).forEach(function (node) {
+    prepend: function (nodeNodesOrHtml) {
+      normalize(nodeNodesOrHtml).forEach(function (node) {
         var reference = content.__startNode;
         reference.parentNode.insertBefore(node, reference);
       });
       return this;
     },
 
-    remove: function (itemOrIndex) {
-      normalize(itemOrIndex).forEach(function (item) {
+    remove: function (nodeNodesOrIndicies) {
+      var that = this;
+      normalize(nodeNodesOrIndicies).forEach(function (item) {
+        if (typeof item === 'number') {
+          item = that.at(item);
+        }
         item.parentNode.removeChild(item);
       });
       return this;

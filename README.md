@@ -148,7 +148,7 @@ Inserts a node, nodes or HTML at the specified index.
 
 Appends a node, nodes or HTML to the collection.
 
-#### `remove (nodeOrNodes)`
+#### `remove (nodeNodesOrIndicies)`
 
 Removes the node or nodes from the collection.
 
