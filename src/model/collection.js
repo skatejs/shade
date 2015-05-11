@@ -58,6 +58,15 @@ export default function (content) {
       return this.all.indexOf(item);
     },
 
+    insert: function (nodes, at) {
+      var that = this;
+      normalize(nodes).forEach(function (node, index) {
+        var reference = that.at(at + index);
+        reference.parentNode.insertBefore(node, reference);
+      });
+      return this;
+    },
+
     prepend: function (nodes) {
       normalize(nodes).forEach(function (node) {
         var reference = content.__startNode;
@@ -67,14 +76,9 @@ export default function (content) {
     },
 
     remove: function (itemOrIndex) {
-      if (typeof itemOrIndex === 'number') {
-        itemOrIndex = [this.at(itemOrIndex)];
-      }
-
       normalize(itemOrIndex).forEach(function (item) {
         item.parentNode.removeChild(item);
       });
-
       return this;
     }
   };
