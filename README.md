@@ -4,23 +4,39 @@ ShadeJS
 Shade is a simple templating engine based on Shadow DOM concepts. It uses the same `<content>` elements and `select="selector"` attributes to project content but uses getters and setters to get / set your content.
 
 ```js
-var listTemplate = shade(`
-  <h2><content name="textContent">My todo list</content></h2>
+var helloWorld = shade(`
+  Hello, <content name="textContent"></content>!
+`);
+
+document.body.appendChild(helloWorldTemplate('<h1>User</h1>'));
+```
+
+Produces:
+
+```html
+<h1>Hello, User!</h1>
+```
+
+In a more complex example, a todo list:
+
+```js
+var todoList = shade(`
+  <h2><content name="textContent">Default todo list title</content></h2>
   <ul>
-    <content name="todos" select="li" multiple>
-      <li><em>There are no todos yet.</li>
+    <content name="items" select="li" multiple>
+      <li><em>You've nothing todo. Chill!</li>
     </content>
   </ul>
 `);
 
-var listItemTemplate = shade(`
-  <content name="textContent"></content>
-  <button type="button">x</button>
+var todoItem = shade(`
+  <content name="textContent">Default todo item title</content>
+  <button type="button">&times;</button>
 `);
 
-listTemplate('<div></div>')
-  .todos
-  .append(listItemTemplate('<li>Todo 1</li>'));
+todoList('<section></section>')
+  .items
+  .append(todoItem('<li>Todo 1</li>'));
 ```
 
 Produces:
