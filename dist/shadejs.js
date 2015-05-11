@@ -252,6 +252,15 @@ __3e91116445359d0611b4191935b2268f = (function () {
         return this.all.indexOf(item);
       },
   
+      insert: function insert(nodes, at) {
+        var that = this;
+        normalize(nodes).forEach(function (node, index) {
+          var reference = that.at(at + index);
+          reference.parentNode.insertBefore(node, reference);
+        });
+        return this;
+      },
+  
       prepend: function prepend(nodes) {
         normalize(nodes).forEach(function (node) {
           var reference = content.__startNode;
@@ -261,14 +270,9 @@ __3e91116445359d0611b4191935b2268f = (function () {
       },
   
       remove: function remove(itemOrIndex) {
-        if (typeof itemOrIndex === 'number') {
-          itemOrIndex = [this.at(itemOrIndex)];
-        }
-  
         normalize(itemOrIndex).forEach(function (item) {
           item.parentNode.removeChild(item);
         });
-  
         return this;
       }
     }, {
@@ -394,10 +398,12 @@ __3452ee3f8362cb4649c9b5d621e63079 = (function () {
   
   var _makeProperty2 = _interopRequireDefault(_makeProperty);
   
+  var DEFAULT_PROPERTY = 'textContent';
+  
   exports['default'] = function (el) {
     var contents = el.__contents = _get2['default'](el);
     contents.forEach(function (content) {
-      var name = content.getAttribute('name') || 'content';
+      var name = content.getAttribute('name') || DEFAULT_PROPERTY;
       var parentNode = content.parentNode;
       var startNode = document.createComment('');
       var stopNode = document.createComment('');
