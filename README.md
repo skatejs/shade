@@ -24,7 +24,7 @@ var todoList = shade(`
   <h2><content name="textContent">Default todo list title</content></h2>
   <ul>
     <content name="items" select="li" multiple>
-      <li><em>You've nothing todo. Chill!</li>
+      <li><em>You've nothing todo. Chill!</em></li>
     </content>
   </ul>
 `);
