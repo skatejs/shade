@@ -221,8 +221,8 @@ __3e91116445359d0611b4191935b2268f = (function () {
   exports['default'] = function (content) {
     return Object.defineProperties({
   
-      append: function append(nodes) {
-        normalize(nodes).forEach(function (node) {
+      append: function append(nodeNodesOrHtml) {
+        normalize(nodeNodesOrHtml).forEach(function (node) {
           var reference = content.__stopNode;
           reference.parentNode.insertBefore(node, reference);
         });
@@ -252,25 +252,29 @@ __3e91116445359d0611b4191935b2268f = (function () {
         return this.all.indexOf(item);
       },
   
-      insert: function insert(nodes, at) {
+      insert: function insert(nodeNodesOrHtml, at) {
         var that = this;
-        normalize(nodes).forEach(function (node, index) {
+        normalize(nodeNodesOrHtml).forEach(function (node, index) {
           var reference = that.at(at + index);
           reference.parentNode.insertBefore(node, reference);
         });
         return this;
       },
   
-      prepend: function prepend(nodes) {
-        normalize(nodes).forEach(function (node) {
+      prepend: function prepend(nodeNodesOrHtml) {
+        normalize(nodeNodesOrHtml).forEach(function (node) {
           var reference = content.__startNode;
           reference.parentNode.insertBefore(node, reference);
         });
         return this;
       },
   
-      remove: function remove(itemOrIndex) {
-        normalize(itemOrIndex).forEach(function (item) {
+      remove: function remove(nodeNodesOrIndicies) {
+        var that = this;
+        normalize(nodeNodesOrIndicies).forEach(function (item) {
+          if (typeof item === 'number') {
+            item = that.at(item);
+          }
           item.parentNode.removeChild(item);
         });
         return this;
