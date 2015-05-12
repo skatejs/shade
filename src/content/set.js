@@ -1,8 +1,7 @@
 import fragmentFromString from '../util/fragment-from-string';
 import getContent from './get';
 
-export default function (el, html) {
-  var frag = fragmentFromString(html);
+export default function (el, frag) {
   getContent(el).forEach(function (content) {
     var name = content.getAttribute('name');
     var multiple = content.hasAttribute('multiple');

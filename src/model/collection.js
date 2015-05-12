@@ -1,21 +1,5 @@
 import findNodesBetween from '../util/find-nodes-between';
-import fragmentFromString from '../util/fragment-from-string';
-
-function normalize (itemOrCollection) {
-  if (!itemOrCollection) {
-    return [];
-  }
-
-  if (typeof itemOrCollection === 'string') {
-    itemOrCollection = fragmentFromString(itemOrCollection).childNodes[0];
-  }
-
-  if (typeof itemOrCollection.length === 'number') {
-    return itemOrCollection;
-  }
-
-  return [itemOrCollection];
-}
+import fragmentFromAnything from '../util/fragment-from-anything';
 
 export default function (content) {
   return {
@@ -27,11 +11,9 @@ export default function (content) {
       return this.all.length;
     },
 
-    append: function (nodeNodesOrHtml) {
-      normalize(nodeNodesOrHtml).forEach(function (node) {
-        var reference = content.__stopNode;
-        reference.parentNode.insertBefore(node, reference);
-      });
+    append: function (node) {
+      var reference = content.__stopNode;
+      reference.parentNode.insertBefore(fragmentFromAnything(node), reference);
       return this;
     },
 
@@ -40,49 +22,37 @@ export default function (content) {
     },
 
     clear: function () {
-      return this.each(function (item) {
+      this.all.forEach(function (item) {
         item.parentNode.removeChild(item);
       });
+      return this;
     },
 
     content: function (content) {
       return this.clear().append(content);
     },
 
-    each: function (fn) {
-      this.all.forEach(fn);
-      return this;
+    index: function (node) {
+      return this.all.indexOf(node);
     },
 
-    index: function (item) {
-      return this.all.indexOf(item);
-    },
-
-    insert: function (nodeNodesOrHtml, at) {
+    insert: function (node, at) {
       var that = this;
-      normalize(nodeNodesOrHtml).forEach(function (node, index) {
-        var reference = that.at(at + index);
-        reference.parentNode.insertBefore(node, reference);
-      });
+      var reference = this.at(at) || content.__stopNode;
+      reference.parentNode.insertBefore(fragmentFromAnything(node), reference);
       return this;
     },
 
-    prepend: function (nodeNodesOrHtml) {
-      normalize(nodeNodesOrHtml).forEach(function (node) {
-        var reference = content.__startNode;
-        reference.parentNode.insertBefore(node, reference);
-      });
+    prepend: function (node) {
+      var reference = this.at(0) || content.__stopNode;
+      reference.parentNode.insertBefore(fragmentFromAnything(node), reference);
       return this;
     },
 
-    remove: function (nodeNodesOrIndicies) {
-      var that = this;
-      normalize(nodeNodesOrIndicies).forEach(function (item) {
-        if (typeof item === 'number') {
-          item = that.at(item);
-        }
-        item.parentNode.removeChild(item);
-      });
+    remove: function (node) {
+      node = fragmentFromAnything(node, this.all);
+      var parent = node.parentNode;
+      parent && parent.removeChild(node);
       return this;
     }
   };

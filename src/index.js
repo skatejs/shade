@@ -1,22 +1,18 @@
-import fragmentFromString from './util/fragment-from-string';
+import fragmentFromAnything from './util/fragment-from-anything';
 import setContent from './content/set';
 import setUpContent from './content/set-up';
 
-export default window.shade = function (templateString) {
-  templateString = templateString && templateString.trim() || '';
+export default window.shade = function (tmp) {
+  var tmpFrag = fragmentFromAnything(tmp);
 
   return function (el) {
-    var originalHtml;
+    var oldHtml = el.innerHTML;
+    var oldFrag = fragmentFromAnything(oldHtml);
 
-    if (typeof el === 'string') {
-      el = fragmentFromString(el).childNodes[0];
-    }
-
-    originalHtml = el.innerHTML;
-    el.innerHTML = templateString;
-
+    el.innerHTML = '';
+    el.appendChild(tmpFrag);
     setUpContent(el);
-    setContent(el, originalHtml);
+    setContent(el, oldFrag);
 
     return el;
   };
