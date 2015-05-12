@@ -9,6 +9,10 @@ export default window.shade = function (tmp) {
     var oldHtml = el.innerHTML;
     var oldFrag = fragmentFromAnything(oldHtml);
 
+    if (typeof el === 'string') {
+      el = fragmentFromAnything(el).children[0];
+    }
+
     el.innerHTML = '';
     el.appendChild(tmpFrag);
     setUpContent(el);

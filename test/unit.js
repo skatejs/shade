@@ -34,8 +34,13 @@ describe('shade', function () {
       template('some string')(div);
     });
 
+    it('takes a string', function () {
+      template('some string')('<div></div>');
+    });
+
     it('returns the element that was passed in', function () {
       expect(template('some string')(div)).to.equal(div);
+      expect(template('some string')('<div></div>')).to.be.an.instanceof(window.HTMLDivElement);
     });
 
     it('sets the content of the element to the template string', function () {
