@@ -6,12 +6,14 @@ export default window.shade = function (tmp) {
   var tmpFrag = fragmentFromAnything(tmp);
 
   return function (el) {
-    var oldHtml = el.innerHTML;
-    var oldFrag = fragmentFromAnything(oldHtml);
+    var oldFrag, oldHtml;
 
     if (typeof el === 'string') {
       el = fragmentFromAnything(el).children[0];
     }
+
+    oldHtml = el.innerHTML;
+    oldFrag = fragmentFromAnything(oldHtml);
 
     el.innerHTML = '';
     el.appendChild(tmpFrag);

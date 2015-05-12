@@ -45,7 +45,12 @@ export default function (content) {
         value = fragmentFromString(content.innerHTML);
       }
 
-      collection(content).content(value);
+      // Value should default to the default content.
+      if (!value.childNodes.length) {
+        value = content.innerHTML;
+      }
+
+      coll.content(value);
     }
   };
 }

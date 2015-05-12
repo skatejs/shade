@@ -194,10 +194,6 @@ __c021ee864a8581926f21313c93a3e63f = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
-  
-  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
-  
   var _get = __44fc0bb6e1d23cb1b0a7c1a409626af2;
   
   var _get2 = _interopRequireDefault(_get);
@@ -424,7 +420,12 @@ __eef66f402a853f9ffff7cd32379113bb = (function () {
           value = _utilFragmentFromString2['default'](content.innerHTML);
         }
   
-        _modelCollection2['default'](content).content(value);
+        // Value should default to the default content.
+        if (!value.childNodes.length) {
+          value = content.innerHTML;
+        }
+  
+        coll.content(value);
       }
     };
   };
@@ -509,12 +510,14 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     var tmpFrag = _utilFragmentFromAnything2['default'](tmp);
   
     return function (el) {
-      var oldHtml = el.innerHTML;
-      var oldFrag = _utilFragmentFromAnything2['default'](oldHtml);
+      var oldFrag, oldHtml;
   
       if (typeof el === 'string') {
         el = _utilFragmentFromAnything2['default'](el).children[0];
       }
+  
+      oldHtml = el.innerHTML;
+      oldFrag = _utilFragmentFromAnything2['default'](oldHtml);
   
       el.innerHTML = '';
       el.appendChild(tmpFrag);

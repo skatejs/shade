@@ -1,4 +1,3 @@
-import fragmentFromString from '../util/fragment-from-string';
 import getContent from './get';
 
 export default function (el, frag) {
