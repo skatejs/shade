@@ -31,6 +31,30 @@ __30b400647c92b587f3d7e75db182c98e = (function () {
   return module.exports;
 }).call(this);
 
+// src/util/fragment-from-node.js
+__dc8ac56fe453d355e4f05d4b7918bf1e = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  
+  exports["default"] = function (node) {
+    var frag = document.createDocumentFragment();
+    if (node) {
+      frag.appendChild(node);
+    }
+    return frag;
+  };
+  
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
 // src/util/fragment-from-string.js
 __75288c9eae43be4f69a605d574814320 = (function () {
   var module = {
@@ -67,6 +91,66 @@ __75288c9eae43be4f69a605d574814320 = (function () {
   
     return _fragmentFromCollection2['default'](div.childNodes);
   };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/fragment-from-anything.js
+__5a306df716eb2212ff834894672bc372 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  exports['default'] = fragmentFromAnything;
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _fragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
+  
+  var _fragmentFromCollection2 = _interopRequireDefault(_fragmentFromCollection);
+  
+  var _fragmentFromNode = __dc8ac56fe453d355e4f05d4b7918bf1e;
+  
+  var _fragmentFromNode2 = _interopRequireDefault(_fragmentFromNode);
+  
+  var _fragmentFromString = __75288c9eae43be4f69a605d574814320;
+  
+  var _fragmentFromString2 = _interopRequireDefault(_fragmentFromString);
+  
+  var NodeList = window.NodeList;
+  
+  function fragmentFromAnything(item, search) {
+    if (search && typeof item === 'number') {
+      return _fragmentFromNode2['default'](search[item]);
+    }
+  
+    if (!item) {
+      return document.createDocumentFragment();
+    }
+  
+    if (typeof item === 'string') {
+      return _fragmentFromString2['default'](item);
+    }
+  
+    if (item instanceof NodeList) {
+      return _fragmentFromCollection2['default'](item);
+    }
+  
+    if (typeof item.length === 'number') {
+      return [].reduce.call(item, function (prev, curr) {
+        prev.appendChild(fragmentFromAnything(curr, search));
+        return prev;
+      }, document.createDocumentFragment());
+    }
+  
+    return item;
+  }
   
   module.exports = exports['default'];
   
@@ -118,8 +202,7 @@ __c021ee864a8581926f21313c93a3e63f = (function () {
   
   var _get2 = _interopRequireDefault(_get);
   
-  exports['default'] = function (el, html) {
-    var frag = _utilFragmentFromString2['default'](html);
+  exports['default'] = function (el, frag) {
     _get2['default'](el).forEach(function (content) {
       var name = content.getAttribute('name');
       var multiple = content.hasAttribute('multiple');
@@ -198,34 +281,16 @@ __3e91116445359d0611b4191935b2268f = (function () {
   
   var _utilFindNodesBetween2 = _interopRequireDefault(_utilFindNodesBetween);
   
-  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
+  var _utilFragmentFromAnything = __5a306df716eb2212ff834894672bc372;
   
-  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
-  
-  function normalize(itemOrCollection) {
-    if (!itemOrCollection) {
-      return [];
-    }
-  
-    if (typeof itemOrCollection === 'string') {
-      itemOrCollection = _utilFragmentFromString2['default'](itemOrCollection).childNodes[0];
-    }
-  
-    if (typeof itemOrCollection.length === 'number') {
-      return itemOrCollection;
-    }
-  
-    return [itemOrCollection];
-  }
+  var _utilFragmentFromAnything2 = _interopRequireDefault(_utilFragmentFromAnything);
   
   exports['default'] = function (content) {
     return Object.defineProperties({
   
-      append: function append(nodeNodesOrHtml) {
-        normalize(nodeNodesOrHtml).forEach(function (node) {
-          var reference = content.__stopNode;
-          reference.parentNode.insertBefore(node, reference);
-        });
+      append: function append(node) {
+        var reference = content.__stopNode;
+        reference.parentNode.insertBefore(_utilFragmentFromAnything2['default'](node), reference);
         return this;
       },
   
@@ -234,49 +299,37 @@ __3e91116445359d0611b4191935b2268f = (function () {
       },
   
       clear: function clear() {
-        return this.each(function (item) {
+        this.all.forEach(function (item) {
           item.parentNode.removeChild(item);
         });
+        return this;
       },
   
       content: function content(_content) {
         return this.clear().append(_content);
       },
   
-      each: function each(fn) {
-        this.all.forEach(fn);
-        return this;
+      index: function index(node) {
+        return this.all.indexOf(node);
       },
   
-      index: function index(item) {
-        return this.all.indexOf(item);
-      },
-  
-      insert: function insert(nodeNodesOrHtml, at) {
+      insert: function insert(node, at) {
         var that = this;
-        normalize(nodeNodesOrHtml).forEach(function (node, index) {
-          var reference = that.at(at + index);
-          reference.parentNode.insertBefore(node, reference);
-        });
+        var reference = this.at(at) || content.__stopNode;
+        reference.parentNode.insertBefore(_utilFragmentFromAnything2['default'](node), reference);
         return this;
       },
   
-      prepend: function prepend(nodeNodesOrHtml) {
-        normalize(nodeNodesOrHtml).forEach(function (node) {
-          var reference = content.__startNode;
-          reference.parentNode.insertBefore(node, reference);
-        });
+      prepend: function prepend(node) {
+        var reference = this.at(0) || content.__stopNode;
+        reference.parentNode.insertBefore(_utilFragmentFromAnything2['default'](node), reference);
         return this;
       },
   
-      remove: function remove(nodeNodesOrIndicies) {
-        var that = this;
-        normalize(nodeNodesOrIndicies).forEach(function (item) {
-          if (typeof item === 'number') {
-            item = that.at(item);
-          }
-          item.parentNode.removeChild(item);
-        });
+      remove: function remove(node) {
+        node = _utilFragmentFromAnything2['default'](node, this.all);
+        var parent = node.parentNode;
+        parent && parent.removeChild(node);
         return this;
       }
     }, {
@@ -440,9 +493,9 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
+  var _utilFragmentFromAnything = __5a306df716eb2212ff834894672bc372;
   
-  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
+  var _utilFragmentFromAnything2 = _interopRequireDefault(_utilFragmentFromAnything);
   
   var _contentSet = __c021ee864a8581926f21313c93a3e63f;
   
@@ -452,21 +505,17 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   var _contentSetUp2 = _interopRequireDefault(_contentSetUp);
   
-  exports['default'] = window.shade = function (templateString) {
-    templateString = templateString && templateString.trim() || '';
+  exports['default'] = window.shade = function (tmp) {
+    var tmpFrag = _utilFragmentFromAnything2['default'](tmp);
   
     return function (el) {
-      var originalHtml;
+      var oldHtml = el.innerHTML;
+      var oldFrag = _utilFragmentFromAnything2['default'](oldHtml);
   
-      if (typeof el === 'string') {
-        el = _utilFragmentFromString2['default'](el).childNodes[0];
-      }
-  
-      originalHtml = el.innerHTML;
-      el.innerHTML = templateString;
-  
+      el.innerHTML = '';
+      el.appendChild(tmpFrag);
       _contentSetUp2['default'](el);
-      _contentSet2['default'](el, originalHtml);
+      _contentSet2['default'](el, oldFrag);
   
       return el;
     };
