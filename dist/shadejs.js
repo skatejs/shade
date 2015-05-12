@@ -512,6 +512,10 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
       var oldHtml = el.innerHTML;
       var oldFrag = _utilFragmentFromAnything2['default'](oldHtml);
   
+      if (typeof el === 'string') {
+        el = _utilFragmentFromAnything2['default'](el).children[0];
+      }
+  
       el.innerHTML = '';
       el.appendChild(tmpFrag);
       _contentSetUp2['default'](el);
