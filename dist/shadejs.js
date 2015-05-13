@@ -333,6 +333,8 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
           node.parentNode.removeChild(node);
         }
   
+        addDefaultNodes();
+  
         return this;
       },
   

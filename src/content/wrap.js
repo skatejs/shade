@@ -121,6 +121,10 @@ export default function (content) {
         node.parentNode.removeChild(node);
       }
 
+      if (!this.nodes.length) {
+        addDefaultNodes();
+      }
+
       return this;
     },
 
