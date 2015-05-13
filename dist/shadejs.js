@@ -12,41 +12,10 @@ __30b400647c92b587f3d7e75db182c98e = (function () {
   exports["default"] = function (nodeList) {
     var frag = document.createDocumentFragment();
   
-    if (Array.isArray(nodeList)) {
-      var nodeListLength = nodeList.length;
-      for (var a = 0; a < nodeListLength; a++) {
-        frag.appendChild(nodeList[a]);
-      }
-    } else {
-      while (nodeList && nodeList.length) {
-        frag.appendChild(nodeList[0]);
-      }
-    }
-  
-    return frag;
-  };
-  
-  module.exports = exports["default"];
-  
-  return module.exports;
-}).call(this);
-
-// src/util/fragment-from-node.js
-__dc8ac56fe453d355e4f05d4b7918bf1e = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  
-  exports["default"] = function (node) {
-    var frag = document.createDocumentFragment();
-    if (node) {
+    [].slice.call(nodeList).forEach(function (node) {
       frag.appendChild(node);
-    }
+    });
+  
     return frag;
   };
   
@@ -97,66 +66,6 @@ __75288c9eae43be4f69a605d574814320 = (function () {
   return module.exports;
 }).call(this);
 
-// src/util/fragment-from-anything.js
-__5a306df716eb2212ff834894672bc372 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  exports['default'] = fragmentFromAnything;
-  
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _fragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
-  
-  var _fragmentFromCollection2 = _interopRequireDefault(_fragmentFromCollection);
-  
-  var _fragmentFromNode = __dc8ac56fe453d355e4f05d4b7918bf1e;
-  
-  var _fragmentFromNode2 = _interopRequireDefault(_fragmentFromNode);
-  
-  var _fragmentFromString = __75288c9eae43be4f69a605d574814320;
-  
-  var _fragmentFromString2 = _interopRequireDefault(_fragmentFromString);
-  
-  var NodeList = window.NodeList;
-  
-  function fragmentFromAnything(item, search) {
-    if (search && typeof item === 'number') {
-      return _fragmentFromNode2['default'](search[item]);
-    }
-  
-    if (!item) {
-      return document.createDocumentFragment();
-    }
-  
-    if (typeof item === 'string') {
-      return _fragmentFromString2['default'](item);
-    }
-  
-    if (item instanceof NodeList) {
-      return _fragmentFromCollection2['default'](item);
-    }
-  
-    if (typeof item.length === 'number') {
-      return [].reduce.call(item, function (prev, curr) {
-        prev.appendChild(fragmentFromAnything(curr, search));
-        return prev;
-      }, document.createDocumentFragment());
-    }
-  
-    return item;
-  }
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
 // src/content/get.js
 __44fc0bb6e1d23cb1b0a7c1a409626af2 = (function () {
   var module = {
@@ -174,42 +83,6 @@ __44fc0bb6e1d23cb1b0a7c1a409626af2 = (function () {
     }
   
     return el.__content;
-  };
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// src/content/set.js
-__c021ee864a8581926f21313c93a3e63f = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _get = __44fc0bb6e1d23cb1b0a7c1a409626af2;
-  
-  var _get2 = _interopRequireDefault(_get);
-  
-  exports['default'] = function (el, frag) {
-    _get2['default'](el).forEach(function (content) {
-      var name = content.getAttribute('name');
-      var multiple = content.hasAttribute('multiple');
-      var selector = content.getAttribute('selector');
-  
-      if (selector) {
-        el[name] = multiple ? frag.querySelectorAll(selector) : frag.querySelector(selector);
-      } else {
-        el[name] = frag;
-      }
-    });
   };
   
   module.exports = exports['default'];
@@ -260,8 +133,98 @@ __f80bd0af0b10c72626d8bdce00313b6e = (function () {
   return module.exports;
 }).call(this);
 
-// src/model/collection.js
-__3e91116445359d0611b4191935b2268f = (function () {
+// src/util/fragment-from-node.js
+__dc8ac56fe453d355e4f05d4b7918bf1e = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  
+  exports["default"] = function (node) {
+    var frag = document.createDocumentFragment();
+    if (node) {
+      frag.appendChild(node);
+    }
+    return frag;
+  };
+  
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/fragment-from-anything.js
+__5a306df716eb2212ff834894672bc372 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  exports['default'] = fragmentFromAnything;
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _fragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
+  
+  var _fragmentFromCollection2 = _interopRequireDefault(_fragmentFromCollection);
+  
+  var _fragmentFromNode = __dc8ac56fe453d355e4f05d4b7918bf1e;
+  
+  var _fragmentFromNode2 = _interopRequireDefault(_fragmentFromNode);
+  
+  var _fragmentFromString = __75288c9eae43be4f69a605d574814320;
+  
+  var _fragmentFromString2 = _interopRequireDefault(_fragmentFromString);
+  
+  var DocumentFragment = window.DocumentFragment;
+  var Node = window.Node;
+  var NodeList = window.NodeList;
+  
+  function fragmentFromAnything(item) {
+    if (!item) {
+      return document.createDocumentFragment();
+    }
+  
+    if (typeof item === 'string') {
+      return _fragmentFromString2['default'](item);
+    }
+  
+    if (item instanceof DocumentFragment) {
+      return item;
+    }
+  
+    if (item instanceof Node) {
+      return _fragmentFromNode2['default'](item);
+    }
+  
+    if (item instanceof NodeList) {
+      return _fragmentFromCollection2['default'](item);
+    }
+  
+    if (typeof item.length === 'number') {
+      return [].reduce.call(item, function (prev, curr) {
+        prev.appendChild(fragmentFromAnything(curr));
+        return prev;
+      }, document.createDocumentFragment());
+    }
+  
+    return item;
+  }
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/content/wrap.js
+__9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
   var module = {
     exports: {}
   };
@@ -281,64 +244,149 @@ __3e91116445359d0611b4191935b2268f = (function () {
   
   var _utilFragmentFromAnything2 = _interopRequireDefault(_utilFragmentFromAnything);
   
+  var _utilFragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
+  
+  var _utilFragmentFromCollection2 = _interopRequireDefault(_utilFragmentFromCollection);
+  
+  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
+  
+  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
+  
+  var Element = window.Element;
+  var elProto = window.HTMLElement.prototype;
+  var matches = elProto.matches || elProto.mozMatchesSelctor || elProto.msMatchesSelctor || elProto.oMatchesSelctor || elProto.webkitMatchesSelctor;
+  
   exports['default'] = function (content) {
+    function addDefaultNodes() {
+      if (!content.__initialised) {
+        content.__initialised = true;
+        var reference = content.__stopNode;
+        reference.parentNode.insertBefore(_utilFragmentFromString2['default'](content.__default), reference);
+      }
+    }
+  
+    function getAllNodes() {
+      return _utilFindNodesBetween2['default'](content.__startNode, content.__stopNode);
+    }
+  
+    function removeDefaultNodes() {
+      if (content.__initialised) {
+        content.__initialised = false;
+        getAllNodes().forEach(function (node) {
+          node.parentNode.removeChild(node);
+        });
+      }
+    }
+  
     return Object.defineProperties({
   
-      append: function append(node) {
-        var reference = content.__stopNode;
-        reference.parentNode.insertBefore(_utilFragmentFromAnything2['default'](node), reference);
+      accept: function accept(node, callback) {
+        node = _utilFragmentFromAnything2['default'](node);
+        var selector = content.getAttribute('select');
+  
+        if (selector) {
+          node = _utilFragmentFromCollection2['default'](node.querySelectorAll(selector));
+        }
+  
+        if (node.childNodes.length) {
+          removeDefaultNodes();
+          callback(node);
+        } else {
+          addDefaultNodes();
+        }
+  
         return this;
       },
   
-      at: function at(index) {
-        return this.all[index];
+      append: function append(node) {
+        var reference = content.__stopNode;
+        return this.accept(node, function (node) {
+          reference.parentNode.insertBefore(node, reference);
+        });
       },
   
-      clear: function clear() {
-        this.all.forEach(function (item) {
-          item.parentNode.removeChild(item);
+      contains: function contains(node) {
+        return content.__startNode.parentNode === node.parentNode;
+      },
+  
+      insert: function insert(node, at) {
+        var reference = this.nodes[at] || content.__stopNode;
+        return this.accept(node, function (node) {
+          reference.parentNode.insertBefore(node, reference);
+        });
+      },
+  
+      prepend: function prepend(node) {
+        var reference = this.nodes[0] || content.__stopNode;
+        this.accept(node, function (node) {
+          reference.parentNode.insertBefore(node, reference);
         });
         return this;
       },
   
-      content: function content(_content) {
-        return this.clear().append(_content);
-      },
-  
-      index: function index(node) {
-        return this.all.indexOf(node);
-      },
-  
-      insert: function insert(node, at) {
-        var that = this;
-        var reference = this.at(at) || content.__stopNode;
-        reference.parentNode.insertBefore(_utilFragmentFromAnything2['default'](node), reference);
-        return this;
-      },
-  
-      prepend: function prepend(node) {
-        var reference = this.at(0) || content.__stopNode;
-        reference.parentNode.insertBefore(_utilFragmentFromAnything2['default'](node), reference);
-        return this;
-      },
-  
       remove: function remove(node) {
-        node = _utilFragmentFromAnything2['default'](node, this.all);
-        var parent = node.parentNode;
-        parent && parent.removeChild(node);
+        if (typeof node === 'number') {
+          node = this.nodes[node];
+        }
+  
+        if (this.contains(node)) {
+          node.parentNode.removeChild(node);
+        }
+  
+        return this;
+      },
+  
+      removeAll: function removeAll() {
+        this.nodes.forEach(function (item) {
+          item.parentNode.removeChild(item);
+        });
+        addDefaultNodes();
         return this;
       }
     }, {
-      all: {
+      elements: {
         get: function () {
-          return _utilFindNodesBetween2['default'](content.__startNode, content.__stopNode);
+          return this.nodes.filter(function (node) {
+            return node.nodeType === 1;
+          });
+        },
+        configurable: true,
+        enumerable: true
+      },
+      html: {
+        get: function () {
+          return this.nodes.reduce(function (prev, curr) {
+            return prev + curr.outerHTML;
+          }, '');
+        },
+        set: function (value) {
+          this.removeAll().append(value);
         },
         configurable: true,
         enumerable: true
       },
       length: {
         get: function () {
-          return this.all.length;
+          return this.nodes.length;
+        },
+        configurable: true,
+        enumerable: true
+      },
+      nodes: {
+        get: function () {
+          return content.__initialised ? [] : getAllNodes();
+        },
+        configurable: true,
+        enumerable: true
+      },
+      text: {
+        get: function () {
+          return this.nodes.reduce(function (prev, curr) {
+            return prev + curr.textContent;
+          }, '');
+        },
+        set: function (value) {
+          this.removeAll().append(document.createTextNode(value));
         },
         configurable: true,
         enumerable: true
@@ -347,6 +395,54 @@ __3e91116445359d0611b4191935b2268f = (function () {
   };
   
   module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/content/set.js
+__c021ee864a8581926f21313c93a3e63f = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _get = __44fc0bb6e1d23cb1b0a7c1a409626af2;
+  
+  var _get2 = _interopRequireDefault(_get);
+  
+  var _wrap = __9a66ad47243c159dcb0602c99dcb9cf1;
+  
+  var _wrap2 = _interopRequireDefault(_wrap);
+  
+  exports['default'] = function (el, html) {
+    _get2['default'](el).forEach(function (content) {
+      _wrap2['default'](content).html = html;
+    });
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/constants.js
+__cb00d40c73a7150c328f8a7d3932a029 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  var DEFAULT_CONTENT_NAME = 'textContent';
+  exports.DEFAULT_CONTENT_NAME = DEFAULT_CONTENT_NAME;
   
   return module.exports;
 }).call(this);
@@ -364,68 +460,27 @@ __eef66f402a853f9ffff7cd32379113bb = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _modelCollection = __3e91116445359d0611b4191935b2268f;
+  var _wrap = __9a66ad47243c159dcb0602c99dcb9cf1;
   
-  var _modelCollection2 = _interopRequireDefault(_modelCollection);
-  
-  var _utilFindNodesBetween = __f80bd0af0b10c72626d8bdce00313b6e;
-  
-  var _utilFindNodesBetween2 = _interopRequireDefault(_utilFindNodesBetween);
-  
-  var _utilFragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
-  
-  var _utilFragmentFromCollection2 = _interopRequireDefault(_utilFragmentFromCollection);
-  
-  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
-  
-  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
-  
-  var Node = window.Node;
-  var NodeList = window.NodeList;
+  var _wrap2 = _interopRequireDefault(_wrap);
   
   exports['default'] = function (content) {
     return {
       get: function get() {
-        var nodes = _modelCollection2['default'](content);
-        return content.hasAttribute('multiple') ? nodes : nodes.at(0) || null;
+        var name = content.__name;
+        var nodes = _wrap2['default'](content);
+  
+        if (name === 'textContent') {
+          return nodes.text;
+        } else if (name === 'innerHTML') {
+          return nodes.html;
+        }
+  
+        return content.hasAttribute('multiple') ? nodes : nodes.nodes[0] || null;
       },
   
       set: function set(value) {
-        var coll = _modelCollection2['default'](content);
-        var multiple = content.hasAttribute('multiple');
-        var selector = content.getAttribute('select');
-  
-        // Initial creation of document fragment so that we can filter.
-        if (typeof value === 'string') {
-          value = _utilFragmentFromString2['default'](value);
-        } else if (typeof value.length === 'number') {
-          value = _utilFragmentFromCollection2['default'](value);
-        } else {
-          value = _utilFragmentFromCollection2['default']([value]);
-        }
-  
-        // Filtering of fragment nodes.
-        if (multiple) {
-          value = selector ? value.querySelectorAll(selector) : value.childNodes;
-        } else {
-          value = selector ? value.querySelector(selector) : value.childNodes[0];
-        }
-  
-        // Creation of a new fragment that can be inserted.
-        if (value instanceof NodeList) {
-          value = _utilFragmentFromCollection2['default'](value);
-        } else if (value instanceof Node) {
-          value = _utilFragmentFromCollection2['default']([value]);
-        } else {
-          value = _utilFragmentFromString2['default'](content.innerHTML);
-        }
-  
-        // Value should default to the default content.
-        if (!value.childNodes.length) {
-          value = content.innerHTML;
-        }
-  
-        coll.content(value);
+        _wrap2['default'](content).html = value;
       }
     };
   };
@@ -448,6 +503,8 @@ __3452ee3f8362cb4649c9b5d621e63079 = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
+  var _constants = __cb00d40c73a7150c328f8a7d3932a029;
+  
   var _get = __44fc0bb6e1d23cb1b0a7c1a409626af2;
   
   var _get2 = _interopRequireDefault(_get);
@@ -456,16 +513,17 @@ __3452ee3f8362cb4649c9b5d621e63079 = (function () {
   
   var _makeProperty2 = _interopRequireDefault(_makeProperty);
   
-  var DEFAULT_PROPERTY = 'textContent';
-  
   exports['default'] = function (el) {
     var contents = el.__contents = _get2['default'](el);
     contents.forEach(function (content) {
-      var name = content.getAttribute('name') || DEFAULT_PROPERTY;
+      var name = content.getAttribute('name') || _constants.DEFAULT_CONTENT_NAME;
       var parentNode = content.parentNode;
       var startNode = document.createComment('');
       var stopNode = document.createComment('');
   
+      content.__default = content.innerHTML.trim();
+      content.__initialised = false;
+      content.__name = name;
       content.__startNode = startNode;
       content.__stopNode = stopNode;
       parentNode.insertBefore(startNode, content);
@@ -494,9 +552,9 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _utilFragmentFromAnything = __5a306df716eb2212ff834894672bc372;
+  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
   
-  var _utilFragmentFromAnything2 = _interopRequireDefault(_utilFragmentFromAnything);
+  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
   
   var _contentSet = __c021ee864a8581926f21313c93a3e63f;
   
@@ -506,23 +564,21 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   var _contentSetUp2 = _interopRequireDefault(_contentSetUp);
   
-  exports['default'] = window.shade = function (tmp) {
-    var tmpFrag = _utilFragmentFromAnything2['default'](tmp);
+  exports['default'] = window.shade = function () {
+    var tmpHtml = arguments[0] === undefined ? '' : arguments[0];
   
+    tmpHtml = tmpHtml.toString().trim();
     return function (el) {
-      var oldFrag, oldHtml;
+      var oldHtml;
   
       if (typeof el === 'string') {
-        el = _utilFragmentFromAnything2['default'](el).children[0];
+        el = _utilFragmentFromString2['default'](el).children[0];
       }
   
       oldHtml = el.innerHTML;
-      oldFrag = _utilFragmentFromAnything2['default'](oldHtml);
-  
-      el.innerHTML = '';
-      el.appendChild(tmpFrag);
+      el.innerHTML = tmpHtml;
       _contentSetUp2['default'](el);
-      _contentSet2['default'](el, oldFrag);
+      _contentSet2['default'](el, oldHtml);
   
       return el;
     };
