@@ -1,9 +1,5 @@
 import template from '../src/index';
 
-function placeholders (html = '') {
-  return '<!---->' + html + '<!---->';
-}
-
 describe('shade', function () {
   it('(String)', function () {
     template('<content></content>');
@@ -55,7 +51,7 @@ describe('shade', function () {
 
     it('creates a default property for content items that do not have names', function () {
       template('<content></content>')(div);
-      expect(div.textContent).to.equal(null);
+      expect(div.textContent).to.equal('');
     });
 
     describe('getter returns', function () {
@@ -74,16 +70,16 @@ describe('shade', function () {
       it('node list', function () {
         div.innerHTML = 'test';
         template('<content name="test" multiple></content>')(div);
-        expect(div.test.at(0).textContent).to.equal('test');
+        expect(div.test.nodes[0].textContent).to.equal('test');
       });
 
       it('node list (selector)', function () {
         div.innerHTML = '<span></span>';
         template('<content name="test" multiple></content>')(div);
-        expect(div.test.at(0).tagName).to.equal('SPAN');
+        expect(div.test.nodes[0].tagName).to.equal('SPAN');
       });
 
-      describe('mutable collection', function () {
+      describe('content wrapper', function () {
         var collection;
 
         function testArgumentNormalization (method) {
@@ -135,12 +131,12 @@ describe('shade', function () {
         }
 
         beforeEach(function () {
-          collection = template('<content multiple></content>')(div).textContent;
+          collection = template('<content name="content" multiple></content>')(div).content;
         });
 
         describe('properties', function () {
-          it('all', function () {
-            expect(collection.all).to.be.an('array');
+          it('nodes', function () {
+            expect(collection.nodes).to.be.an('array');
           });
 
           it('length', function () {
@@ -155,43 +151,12 @@ describe('shade', function () {
             it('appends', function () {
               var one = document.createElement('one');
               var two = document.createElement('two');
-              var three = document.createElement('three');
 
               collection.append(one);
-              collection.append([two, three]);
+              collection.append(two);
 
-              expect(collection.all[0]).to.equal(one);
-              expect(collection.all[1]).to.equal(two);
-              expect(collection.all[2]).to.equal(three);
-            });
-          });
-
-          describe('at', function () {
-            it('(Number)', function () {
-              var one = document.createElement('one');
-              collection.append(one);
-              expect(collection.at(0)).to.equal(one);
-            });
-          });
-
-          describe('clear', function () {
-            it('(void)', function () {
-              collection.append('<one></one>');
-              collection.clear();
-              expect(collection.length).to.equal(0);
-            });
-          });
-
-          describe('content', function () {
-            testArgumentNormalization('content');
-          });
-
-          describe('index', function () {
-            it('(Node)', function () {
-              var one = document.createElement('one');
-              expect(collection.index(one)).to.equal(-1);
-              collection.append(one);
-              expect(collection.index(one)).to.equal(0);
+              expect(collection.nodes[0]).to.equal(one);
+              expect(collection.nodes[1]).to.equal(two);
             });
           });
 
@@ -211,13 +176,13 @@ describe('shade', function () {
               collection.insert([two, three], 1);
               collection.insert([five, six], 4);
 
-              expect(collection.all[0]).to.equal(one);
-              expect(collection.all[1]).to.equal(two);
-              expect(collection.all[2]).to.equal(three);
-              expect(collection.all[3]).to.equal(four);
-              expect(collection.all[4]).to.equal(five);
-              expect(collection.all[5]).to.equal(six);
-              expect(collection.all[6]).to.equal(seven);
+              expect(collection.nodes[0]).to.equal(one);
+              expect(collection.nodes[1]).to.equal(two);
+              expect(collection.nodes[2]).to.equal(three);
+              expect(collection.nodes[3]).to.equal(four);
+              expect(collection.nodes[4]).to.equal(five);
+              expect(collection.nodes[5]).to.equal(six);
+              expect(collection.nodes[6]).to.equal(seven);
             });
           });
 
@@ -232,9 +197,9 @@ describe('shade', function () {
               collection.prepend(one);
               collection.prepend([two, three]);
 
-              expect(collection.all[0]).to.equal(two);
-              expect(collection.all[1]).to.equal(three);
-              expect(collection.all[2]).to.equal(one);
+              expect(collection.nodes[0]).to.equal(two);
+              expect(collection.nodes[1]).to.equal(three);
+              expect(collection.nodes[2]).to.equal(one);
             });
           });
 
@@ -245,13 +210,15 @@ describe('shade', function () {
               collection.append(one);
               expect(collection.length).to.equal(1);
 
-              collection.remove(0);
-              expect(collection.length).to.equal(0);
-
-              collection.append(one);
-              expect(collection.length).to.equal(1);
-
               collection.remove(one);
+              expect(collection.length).to.equal(0);
+            });
+          });
+
+          describe('removeAll', function () {
+            it('(void)', function () {
+              collection.append('<one></one>');
+              collection.removeAll();
               expect(collection.length).to.equal(0);
             });
           });
@@ -297,18 +264,18 @@ describe('shade', function () {
     describe('content', function () {
       describe('projects nothing if no default is specified', function () {
         it('bare', function () {
-          template('<content></content>')(div);
-          expect(div.textContent).to.equal(null);
+          template('<content name="content"></content>')(div);
+          expect(div.content).to.equal(null);
         });
 
         it('select', function () {
-          template('<content select="span">')(div);
-          expect(div.textContent).to.equal(null);
+          template('<content name="content" select="span">')(div);
+          expect(div.content).to.equal(null);
         });
 
         it('select and multiple', function () {
-          template('<content select="span" multiple></content>')(div);
-          expect(div.textContent).to.be.an('object');
+          template('<content name="content" select="span" multiple></content>')(div);
+          expect(div.content).to.be.an('object');
         });
       });
 
@@ -404,6 +371,35 @@ describe('shade', function () {
 
         });
       });
+    });
+  });
+
+  describe('Practical examples', function () {
+    it('todo list', function () {
+      var todoList = template(`
+        <h2><content>My todo list</content></h2>
+        <ul>
+          <content name="items" select="li" multiple>
+            <li><em>You\'ve nothing todo. Chill!</em></li>
+          </content>
+        </ul>
+      `);
+
+      var todoItem = template(`
+        <content>Do something</content>
+        <button type="button">&times;</button>
+      `);
+
+      var stuff = todoList('<section>Stuff to do</section>');
+      document.body.appendChild(stuff);
+      stuff.items.append([
+        todoItem('<li>Get milk</li>'),
+        todoItem('<li>Get bacon</li>')
+      ]);
+
+      expect(stuff.textContent).to.equal('Stuff to do');
+      expect(stuff.items.nodes[0].textContent).to.equal('Get milk');
+      expect(stuff.items.nodes[1].textContent).to.equal('Get bacon');
     });
   });
 });
