@@ -1,4 +1,6 @@
-import template from '../src/index';
+import shade from '../src/index';
+
+var template = shade();
 
 describe('shade', function () {
   it('(String)', function () {
@@ -332,23 +334,52 @@ describe('shade', function () {
         });
       });
 
-      describe('restore default content when node is emptied', function () {
-        it('bare', function () {
-          template('<content name="content">default</content>')(div);
-          div.content = 'custom';
-          div.content = '';
-          expect(div.textContent).to.equal('default');
+      describe('restores default content', function () {
+        describe('restore default content when node is emptied', function () {
+          it('bare', function () {
+            template('<content name="content">default</content>')(div);
+            div.content = 'custom';
+            div.content = '';
+            expect(div.textContent).to.equal('default');
+          });
+
+          it('select', function () {
+            template('<content name="content" select="span">default</content>')(div);
+            div.content = '<span>custom</span>';
+            div.content = '';
+            expect(div.textContent).to.equal('default');
+          });
+
+          it('select and multiple', function () {
+
+          });
         });
 
-        it('select', function () {
-          template('<content name="content" select="span">default</content>')(div);
-          div.content = '<span>custom</span>';
-          div.content = '';
-          expect(div.textContent).to.equal('default');
-        });
+        describe('after all items have been removed', function () {
+          it('remove', function () {
+            template('<content name="content" multiple>default</content>')(div);
+            div.content.append([
+              '<span></span>',
+              '<span></span>'
+            ]);
 
-        it('select and multiple', function () {
+            div.content.remove(div.content.nodes[0]);
+            expect(div.textContent).to.not.contain('default');
 
+            div.content.remove(div.content.nodes[0]);
+            expect(div.textContent).to.contain('default');
+          });
+
+          it('removeAll', function () {
+            template('<content name="content" multiple>default</content>')(div);
+            div.content.append([
+              '<span></span>',
+              '<span></span>'
+            ]);
+
+            div.content.removeAll();
+            expect(div.textContent).to.contain('default');
+          });
         });
       });
 

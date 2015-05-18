@@ -1,15 +1,8 @@
-import findNodesBetween from '../util/find-nodes-between';
-import fragmentFromAnything from '../util/fragment-from-anything';
-import fragmentFromCollection from '../util/fragment-from-collection';
-import fragmentFromString from '../util/fragment-from-string';
-
-var Element = window.Element;
-var elProto = window.HTMLElement.prototype;
-var matches = elProto.matches ||
-  elProto.mozMatchesSelctor ||
-  elProto.msMatchesSelctor ||
-  elProto.oMatchesSelctor ||
-  elProto.webkitMatchesSelctor;
+import apiNotify from '../../api/notify';
+import findNodesBetween from '../../util/find-nodes-between';
+import fragmentFromAnything from '../../util/fragment-from-anything';
+import fragmentFromCollection from '../../util/fragment-from-collection';
+import fragmentFromString from '../../util/fragment-from-string';
 
 export default function (content) {
   function addDefaultNodes () {
@@ -31,6 +24,10 @@ export default function (content) {
         node.parentNode.removeChild(node);
       });
     }
+  }
+
+  function notify () {
+    apiNotify(content.__name)(content.__element);
   }
 
   return {
@@ -90,6 +87,7 @@ export default function (content) {
       var reference = content.__stopNode;
       return this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
+        notify();
       });
     },
 
@@ -97,10 +95,24 @@ export default function (content) {
       return content.__startNode.parentNode === node.parentNode;
     },
 
+    find: function (query) {
+      if (typeof query === 'object') {
+        let oldQuery = query;
+        query = function (item) {
+          for (let a in oldQuery) {
+            return item[a] === oldQuery[a];
+          }
+        };
+      }
+
+      return this.nodes.filter(query);
+    },
+
     insert: function (node, at) {
       var reference = this.nodes[at] || content.__stopNode;
       return this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
+        notify();
       });
     },
 
@@ -108,6 +120,7 @@ export default function (content) {
       var reference = this.nodes[0] || content.__stopNode;
       this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
+        notify();
       });
       return this;
     },
@@ -119,6 +132,7 @@ export default function (content) {
 
       if (this.contains(node)) {
         node.parentNode.removeChild(node);
+        notify();
       }
 
       if (!this.nodes.length) {
@@ -129,8 +143,9 @@ export default function (content) {
     },
 
     removeAll: function () {
-      this.nodes.forEach(function (item) {
-        item.parentNode.removeChild(item);
+      this.nodes.forEach(function (node) {
+        node.parentNode.removeChild(node);
+        notify();
       });
       addDefaultNodes();
       return this;

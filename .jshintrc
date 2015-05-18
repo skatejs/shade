@@ -14,8 +14,7 @@
       "document": false,
       "expect": false,
       "it": false,
-      "NodeFilter": false,
-      "skate": false,
+      "process": false,
       "window": false
     },
   "immed": true,

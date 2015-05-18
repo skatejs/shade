@@ -1,5 +1,21 @@
-// src/util/fragment-from-collection.js
-__30b400647c92b587f3d7e75db182c98e = (function () {
+// src/api/bindings.js
+__7cd43f6452e9eab84438a4ad6025b3e3 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports["default"] = [];
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/find.js
+__e0d18491916c36edcd801fda020cbb64 = (function () {
   var module = {
     exports: {}
   };
@@ -9,14 +25,8 @@ __30b400647c92b587f3d7e75db182c98e = (function () {
     value: true
   });
   
-  exports["default"] = function (nodeList) {
-    var frag = document.createDocumentFragment();
-  
-    [].slice.call(nodeList).forEach(function (node) {
-      frag.appendChild(node);
-    });
-  
-    return frag;
+  exports["default"] = function (el, selector) {
+    return [].slice.call(el.querySelectorAll(selector));
   };
   
   module.exports = exports["default"];
@@ -24,8 +34,8 @@ __30b400647c92b587f3d7e75db182c98e = (function () {
   return module.exports;
 }).call(this);
 
-// src/util/fragment-from-string.js
-__75288c9eae43be4f69a605d574814320 = (function () {
+// src/api/bind.js
+__ee71b6efe56580e3b0576e6146bf20af = (function () {
   var module = {
     exports: {}
   };
@@ -37,28 +47,22 @@ __75288c9eae43be4f69a605d574814320 = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _fragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
+  var _bindings = __7cd43f6452e9eab84438a4ad6025b3e3;
   
-  var _fragmentFromCollection2 = _interopRequireDefault(_fragmentFromCollection);
+  var _bindings2 = _interopRequireDefault(_bindings);
   
-  exports['default'] = function (domString) {
-    var specialMap = {
-      caption: 'table',
-      dd: 'dl',
-      dt: 'dl',
-      li: 'ul',
-      tbody: 'table',
-      td: 'tr',
-      thead: 'table',
-      tr: 'tbody'
-    };
+  var _utilFind = __e0d18491916c36edcd801fda020cbb64;
   
-    var tag = domString.match(/\s*<([^\s>]+)/);
-    var div = document.createElement(tag && specialMap[tag[1]] || 'div');
+  var _utilFind2 = _interopRequireDefault(_utilFind);
   
-    div.innerHTML = domString;
+  exports['default'] = function (selector, fn) {
+    _bindings2['default'].push(function (el, initialContent) {
+      _utilFind2['default'](el, selector).forEach(function (target) {
+        fn(el, target, initialContent);
+      });
+    });
   
-    return _fragmentFromCollection2['default'](div.childNodes);
+    return this;
   };
   
   module.exports = exports['default'];
@@ -66,8 +70,26 @@ __75288c9eae43be4f69a605d574814320 = (function () {
   return module.exports;
 }).call(this);
 
-// src/content/get.js
-__44fc0bb6e1d23cb1b0a7c1a409626af2 = (function () {
+// src/constants.js
+__cb00d40c73a7150c328f8a7d3932a029 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  var DEFAULT_CONTENT_NAME = 'textContent';
+  exports.DEFAULT_CONTENT_NAME = DEFAULT_CONTENT_NAME;
+  var PROPERTY_EVENT_NAME = 'shade.property';
+  exports.PROPERTY_EVENT_NAME = PROPERTY_EVENT_NAME;
+  
+  return module.exports;
+}).call(this);
+
+// src/api/listen.js
+__c5dd6f8f59a03e0df7bce873c1a6aef8 = (function () {
   var module = {
     exports: {}
   };
@@ -77,12 +99,235 @@ __44fc0bb6e1d23cb1b0a7c1a409626af2 = (function () {
     value: true
   });
   
-  exports['default'] = function (el) {
-    if (!el.__content) {
-      el.__content = [].slice.call(el.querySelectorAll('content'));
+  var _constants = __cb00d40c73a7150c328f8a7d3932a029;
+  
+  exports['default'] = function (el, name, fn) {
+    if (arguments.length === 2) {
+      fn = name;
+      name = undefined;
     }
   
-    return el.__content;
+    if (name) {
+      el.addEventListener('' + _constants.PROPERTY_EVENT_NAME + '.' + name, fn);
+    } else {
+      el.addEventListener(_constants.PROPERTY_EVENT_NAME, fn);
+    }
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/event/event.js
+__04e6a92dbc5b4950b19ebc85c5615cd3 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var CustomEvent = window.CustomEvent;
+  
+  exports["default"] = function (name, opts) {
+    opts = opts || {};
+  
+    if (opts.bubbles === undefined) {
+      opts.bubbles = true;
+    }
+  
+    return new CustomEvent(name, opts);
+  };
+  
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
+// src/event/dispatch.js
+__5ad1b0ebf0a4d70a2e8fa66fe6603e0a = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _event = __04e6a92dbc5b4950b19ebc85c5615cd3;
+  
+  var _event2 = _interopRequireDefault(_event);
+  
+  exports['default'] = function (element, name, opts) {
+    return element.dispatchEvent(_event2['default'](name, opts));
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/api/notify.js
+__9fc7a49b416f05fbbc3c65c580d002a2 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _eventDispatch = __5ad1b0ebf0a4d70a2e8fa66fe6603e0a;
+  
+  var _eventDispatch2 = _interopRequireDefault(_eventDispatch);
+  
+  var _constants = __cb00d40c73a7150c328f8a7d3932a029;
+  
+  exports['default'] = function (name) {
+    return function (el) {
+      var opts = {
+        bubbles: false,
+        cancellable: false,
+        detail: {
+          name: name,
+          value: el[name]
+        }
+      };
+  
+      _eventDispatch2['default'](el, _constants.PROPERTY_EVENT_NAME, opts);
+  
+      if (opts.detail.name) {
+        _eventDispatch2['default'](el, '' + _constants.PROPERTY_EVENT_NAME + '.' + opts.detail.name, opts);
+      }
+    };
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/prop-proxy.js
+__0126d3be88e859a7360a53615c8c95d9 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
+  
+  var _apiNotify2 = _interopRequireDefault(_apiNotify);
+  
+  exports['default'] = function (el, name) {
+    var descriptor = Object.getOwnPropertyDescriptor(el.constructor.prototype, name);
+    var value;
+  
+    if (descriptor && !descriptor.configurable) {
+      return;
+    }
+  
+    return Object.defineProperty(el, name, {
+      configurable: true,
+      get: function get() {
+        if (descriptor && descriptor.get) {
+          return descriptor.get.call(this);
+        } else {
+          return value;
+        }
+      },
+      set: function set(newValue) {
+        if (descriptor && descriptor.set) {
+          descriptor.set.call(this, newValue);
+        } else {
+          value = newValue;
+        }
+  
+        _apiNotify2['default'](name)(this);
+      }
+    });
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/event/listen.js
+__6ec2aa33e9ae4e76d44cc9de43847b64 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  
+  exports["default"] = function (el, names, callback) {
+    names = Array.isArray(names) ? names : [names];
+    names.forEach(function (name) {
+      el.addEventListener(name, callback);
+    });
+  };
+  
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
+// src/binding/checked.js
+__4771c5f22e51fe701a9946317a626d3b = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
+  
+  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
+  
+  var _eventListen = __6ec2aa33e9ae4e76d44cc9de43847b64;
+  
+  var _eventListen2 = _interopRequireDefault(_eventListen);
+  
+  exports['default'] = function (el, target) {
+    var name = target.getAttribute('name');
+  
+    _utilPropProxy2['default'](el, name);
+  
+    _apiListen2['default'](el, name, function () {
+      target.checked = !!el.checked;
+    });
+  
+    _eventListen2['default'](target, 'change', function () {
+      el[name] = target.checked;
+    });
+  
+    el[name] = target.checked;
   };
   
   module.exports = exports['default'];
@@ -133,6 +378,32 @@ __f80bd0af0b10c72626d8bdce00313b6e = (function () {
   return module.exports;
 }).call(this);
 
+// src/util/fragment-from-collection.js
+__30b400647c92b587f3d7e75db182c98e = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  
+  exports["default"] = function (nodeList) {
+    var frag = document.createDocumentFragment();
+  
+    [].slice.call(nodeList).forEach(function (node) {
+      frag.appendChild(node);
+    });
+  
+    return frag;
+  };
+  
+  module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
 // src/util/fragment-from-node.js
 __dc8ac56fe453d355e4f05d4b7918bf1e = (function () {
   var module = {
@@ -153,6 +424,67 @@ __dc8ac56fe453d355e4f05d4b7918bf1e = (function () {
   };
   
   module.exports = exports["default"];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/fragment-from-string.js
+__75288c9eae43be4f69a605d574814320 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _fragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
+  
+  var _fragmentFromCollection2 = _interopRequireDefault(_fragmentFromCollection);
+  
+  var specialMap = {
+    caption: 'table',
+    dd: 'dl',
+    dt: 'dl',
+    li: 'ul',
+    tbody: 'table',
+    td: 'tr',
+    thead: 'table',
+    tr: 'tbody'
+  };
+  
+  function matchTag(dom) {
+    var tag = dom.match(/\s*<([^\s>]+)/);
+    return tag && tag[1] || 'div';
+  }
+  
+  function resolveCorrectDomParent(dom) {
+    return resolveCorrectTagParents(matchTag(dom));
+  }
+  
+  function resolveCorrectTagParents(tag) {
+    var mapped;
+    var parent = document.createElement(tag);
+  
+    while (mapped = specialMap[parent.tagName.toLowerCase()]) {
+      var tempParent = document.createElement(mapped);
+      tempParent.appendChild(parent);
+      parent = tempParent;
+    }
+  
+    return parent;
+  }
+  
+  exports['default'] = function (dom) {
+    var par = resolveCorrectDomParent(dom);
+    par.innerHTML = dom;
+    return _fragmentFromCollection2['default'](par.childNodes);
+  };
+  
+  module.exports = exports['default'];
   
   return module.exports;
 }).call(this);
@@ -223,8 +555,8 @@ __5a306df716eb2212ff834894672bc372 = (function () {
   return module.exports;
 }).call(this);
 
-// src/content/wrap.js
-__9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
+// src/binding/content/wrap.js
+__e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
   var module = {
     exports: {}
   };
@@ -235,6 +567,10 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
   });
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
+  
+  var _apiNotify2 = _interopRequireDefault(_apiNotify);
   
   var _utilFindNodesBetween = __f80bd0af0b10c72626d8bdce00313b6e;
   
@@ -251,10 +587,6 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
   var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
   
   var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
-  
-  var Element = window.Element;
-  var elProto = window.HTMLElement.prototype;
-  var matches = elProto.matches || elProto.mozMatchesSelctor || elProto.msMatchesSelctor || elProto.oMatchesSelctor || elProto.webkitMatchesSelctor;
   
   exports['default'] = function (content) {
     function addDefaultNodes() {
@@ -276,6 +608,10 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
           node.parentNode.removeChild(node);
         });
       }
+    }
+  
+    function notify() {
+      _apiNotify2['default'](content.__name)(content.__element);
     }
   
     return Object.defineProperties({
@@ -302,6 +638,7 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
         var reference = content.__stopNode;
         return this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
+          notify();
         });
       },
   
@@ -309,10 +646,26 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
         return content.__startNode.parentNode === node.parentNode;
       },
   
+      find: function find(query) {
+        if (typeof query === 'object') {
+          (function () {
+            var oldQuery = query;
+            query = function (item) {
+              for (var a in oldQuery) {
+                return item[a] === oldQuery[a];
+              }
+            };
+          })();
+        }
+  
+        return this.nodes.filter(query);
+      },
+  
       insert: function insert(node, at) {
         var reference = this.nodes[at] || content.__stopNode;
         return this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
+          notify();
         });
       },
   
@@ -320,6 +673,7 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
         var reference = this.nodes[0] || content.__stopNode;
         this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
+          notify();
         });
         return this;
       },
@@ -331,16 +685,20 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
   
         if (this.contains(node)) {
           node.parentNode.removeChild(node);
+          notify();
         }
   
-        addDefaultNodes();
+        if (!this.nodes.length) {
+          addDefaultNodes();
+        }
   
         return this;
       },
   
       removeAll: function removeAll() {
-        this.nodes.forEach(function (item) {
-          item.parentNode.removeChild(item);
+        this.nodes.forEach(function (node) {
+          node.parentNode.removeChild(node);
+          notify();
         });
         addDefaultNodes();
         return this;
@@ -401,8 +759,8 @@ __9a66ad47243c159dcb0602c99dcb9cf1 = (function () {
   return module.exports;
 }).call(this);
 
-// src/content/set.js
-__c021ee864a8581926f21313c93a3e63f = (function () {
+// src/binding/content/make-property.js
+__3b41741c587b0717ffbe410dee595b40 = (function () {
   var module = {
     exports: {}
   };
@@ -414,60 +772,13 @@ __c021ee864a8581926f21313c93a3e63f = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _get = __44fc0bb6e1d23cb1b0a7c1a409626af2;
-  
-  var _get2 = _interopRequireDefault(_get);
-  
-  var _wrap = __9a66ad47243c159dcb0602c99dcb9cf1;
-  
-  var _wrap2 = _interopRequireDefault(_wrap);
-  
-  exports['default'] = function (el, html) {
-    _get2['default'](el).forEach(function (content) {
-      _wrap2['default'](content).html = html;
-    });
-  };
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
-// src/constants.js
-__cb00d40c73a7150c328f8a7d3932a029 = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  var DEFAULT_CONTENT_NAME = 'textContent';
-  exports.DEFAULT_CONTENT_NAME = DEFAULT_CONTENT_NAME;
-  
-  return module.exports;
-}).call(this);
-
-// src/content/make-property.js
-__eef66f402a853f9ffff7cd32379113bb = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _wrap = __9a66ad47243c159dcb0602c99dcb9cf1;
+  var _wrap = __e3571fb8bc72b68f952ecdfea6c7ba29;
   
   var _wrap2 = _interopRequireDefault(_wrap);
   
   exports['default'] = function (content) {
     return {
+      configurable: true,
       get: function get() {
         var name = content.__name;
         var nodes = _wrap2['default'](content);
@@ -480,7 +791,6 @@ __eef66f402a853f9ffff7cd32379113bb = (function () {
   
         return content.hasAttribute('multiple') ? nodes : nodes.nodes[0] || null;
       },
-  
       set: function set(value) {
         _wrap2['default'](content).html = value;
       }
@@ -492,8 +802,8 @@ __eef66f402a853f9ffff7cd32379113bb = (function () {
   return module.exports;
 }).call(this);
 
-// src/content/set-up.js
-__3452ee3f8362cb4649c9b5d621e63079 = (function () {
+// src/binding/content.js
+__af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
   var module = {
     exports: {}
   };
@@ -507,33 +817,164 @@ __3452ee3f8362cb4649c9b5d621e63079 = (function () {
   
   var _constants = __cb00d40c73a7150c328f8a7d3932a029;
   
-  var _get = __44fc0bb6e1d23cb1b0a7c1a409626af2;
+  var _contentMakeProperty = __3b41741c587b0717ffbe410dee595b40;
   
-  var _get2 = _interopRequireDefault(_get);
+  var _contentMakeProperty2 = _interopRequireDefault(_contentMakeProperty);
   
-  var _makeProperty = __eef66f402a853f9ffff7cd32379113bb;
+  var _contentWrap = __e3571fb8bc72b68f952ecdfea6c7ba29;
   
-  var _makeProperty2 = _interopRequireDefault(_makeProperty);
+  var _contentWrap2 = _interopRequireDefault(_contentWrap);
   
-  exports['default'] = function (el) {
-    var contents = el.__contents = _get2['default'](el);
-    contents.forEach(function (content) {
-      var name = content.getAttribute('name') || _constants.DEFAULT_CONTENT_NAME;
-      var parentNode = content.parentNode;
-      var startNode = document.createComment('');
-      var stopNode = document.createComment('');
+  exports['default'] = function (el, target, initialContent) {
+    var name = target.getAttribute('name') || _constants.DEFAULT_CONTENT_NAME;
+    var parentNode = target.parentNode;
+    var startNode = document.createComment('');
+    var stopNode = document.createComment('');
   
-      content.__default = content.innerHTML.trim();
-      content.__initialised = false;
-      content.__name = name;
-      content.__startNode = startNode;
-      content.__stopNode = stopNode;
-      parentNode.insertBefore(startNode, content);
-      parentNode.insertBefore(stopNode, content);
-      parentNode.removeChild(content);
+    // Cache data to refer to in the wrapper.
+    target.__default = target.innerHTML.trim();
+    target.__element = el;
+    target.__initialised = false;
+    target.__name = name;
+    target.__startNode = startNode;
+    target.__stopNode = stopNode;
   
-      Object.defineProperty(el, name, _makeProperty2['default'](content));
+    // Set up placeholders.
+    if (target.tagName === 'CONTENT') {
+      parentNode.insertBefore(startNode, target);
+      parentNode.insertBefore(stopNode, target);
+      parentNode.removeChild(target);
+    } else {
+      target.innerHTML = '';
+      target.appendChild(startNode);
+      target.appendChild(stopNode);
+    }
+  
+    Object.defineProperty(el, name, _contentMakeProperty2['default'](target));
+  
+    // Initialise.
+    _contentWrap2['default'](target).html = initialContent;
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/binding/link.js
+__e3dbb566478a82ee62dcd14dd28f894e = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
+  
+  var _apiNotify2 = _interopRequireDefault(_apiNotify);
+  
+  exports['default'] = function (el, target) {
+    var src = target.getAttribute('src');
+    var dests = target.getAttribute('dest').split(' ');
+  
+    _apiListen2['default'](el, src, function () {
+      dests.forEach(function (dest) {
+        _apiNotify2['default'](dest)(el);
+      });
     });
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/binding/name.js
+__8d354ccbec8214a9b6149f90c1d3600c = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
+  
+  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
+  
+  var _eventListen = __6ec2aa33e9ae4e76d44cc9de43847b64;
+  
+  var _eventListen2 = _interopRequireDefault(_eventListen);
+  
+  exports['default'] = function (el, target) {
+    var name = target.getAttribute('name');
+  
+    _utilPropProxy2['default'](el, name);
+  
+    _apiListen2['default'](el, name, function () {
+      target.value = el[name];
+    });
+  
+    _eventListen2['default'](el, ['change', 'keyup'], function () {
+      el[name] = target.value;
+    });
+  
+    el[name] = target.value;
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/binding/text.js
+__6d77b901264b93f69dbd0ef3ea8503dc = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
+  
+  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
+  
+  exports['default'] = function (el, target) {
+    var name = target.getAttribute('text');
+  
+    _utilPropProxy2['default'](el, name);
+  
+    _apiListen2['default'](el, name, function (e) {
+      target.textContent = e.detail.value;
+    });
+  
+    target.textContent = el[name];
   };
   
   module.exports = exports['default'];
@@ -547,6 +988,50 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     exports: {}
   };
   var exports = module.exports;
+  var defineDependencies = {
+    "module": module,
+    "exports": exports,
+    "./api/bind": __ee71b6efe56580e3b0576e6146bf20af,
+    "./api/bindings": __7cd43f6452e9eab84438a4ad6025b3e3,
+    "./api/listen": __c5dd6f8f59a03e0df7bce873c1a6aef8,
+    "./api/notify": __9fc7a49b416f05fbbc3c65c580d002a2,
+    "./util/prop-proxy": __0126d3be88e859a7360a53615c8c95d9,
+    "./binding/checked": __4771c5f22e51fe701a9946317a626d3b,
+    "./binding/content": __af4e672e7be6cdbb17637f84ccfe1cf9,
+    "./binding/link": __e3dbb566478a82ee62dcd14dd28f894e,
+    "./binding/name": __8d354ccbec8214a9b6149f90c1d3600c,
+    "./binding/text": __6d77b901264b93f69dbd0ef3ea8503dc,
+    "./util/fragment-from-string": __75288c9eae43be4f69a605d574814320
+  };
+  var define = function defineReplacement(name, deps, func) {
+    var rval;
+    var type;
+  
+    func = [func, deps, name].filter(function (cur) { return typeof cur === 'function'; })[0];
+    deps = [deps, name, []].filter(Array.isArray)[0];
+    rval = func.apply(null, deps.map(function (value) { return defineDependencies[value]; }));
+    type = typeof rval;
+  
+    // Some processors like Babel don't check to make sure that the module value
+    // is not a primitive before calling Object.defineProperty() on it. We ensure
+    // it is an instance so that it can.
+    if (type === 'string') {
+      rval = new String(rval);
+    } else if (type === 'number') {
+      rval = new Number(rval);
+    } else if (type === 'boolean') {
+      rval = new Boolean(rval);
+    }
+  
+    // Reset the exports to the defined module. This is how we convert AMD to
+    // CommonJS and ensures both can either co-exist, or be used separately. We
+    // only set it if it is not defined because there is no object representation
+    // of undefined, thus calling Object.defineProperty() on it would fail.
+    if (rval !== undefined) {
+      exports = module.exports = rval;
+    }
+  };
+  define.amd = true;
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -554,38 +1039,91 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
+  var _apiBind = __ee71b6efe56580e3b0576e6146bf20af;
+  
+  var _apiBind2 = _interopRequireDefault(_apiBind);
+  
+  var _apiBindings = __7cd43f6452e9eab84438a4ad6025b3e3;
+  
+  var _apiBindings2 = _interopRequireDefault(_apiBindings);
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
+  
+  var _apiNotify2 = _interopRequireDefault(_apiNotify);
+  
+  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
+  
+  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
+  
+  var _bindingChecked = __4771c5f22e51fe701a9946317a626d3b;
+  
+  var _bindingChecked2 = _interopRequireDefault(_bindingChecked);
+  
+  var _bindingContent = __af4e672e7be6cdbb17637f84ccfe1cf9;
+  
+  var _bindingContent2 = _interopRequireDefault(_bindingContent);
+  
+  var _bindingLink = __e3dbb566478a82ee62dcd14dd28f894e;
+  
+  var _bindingLink2 = _interopRequireDefault(_bindingLink);
+  
+  var _bindingName = __8d354ccbec8214a9b6149f90c1d3600c;
+  
+  var _bindingName2 = _interopRequireDefault(_bindingName);
+  
+  var _bindingText = __6d77b901264b93f69dbd0ef3ea8503dc;
+  
+  var _bindingText2 = _interopRequireDefault(_bindingText);
+  
   var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
   
   var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
   
-  var _contentSet = __c021ee864a8581926f21313c93a3e63f;
+  function shade() {
+    var bindings = arguments[0] === undefined ? shade.bindings : arguments[0];
   
-  var _contentSet2 = _interopRequireDefault(_contentSet);
+    function define() {
+      var tmpHtml = arguments[0] === undefined ? '' : arguments[0];
   
-  var _contentSetUp = __3452ee3f8362cb4649c9b5d621e63079;
+      tmpHtml = tmpHtml.toString().trim();
+      return function (el) {
+        var initialContent;
   
-  var _contentSetUp2 = _interopRequireDefault(_contentSetUp);
+        if (typeof el === 'string') {
+          el = _utilFragmentFromString2['default'](el).children[0];
+        }
   
-  exports['default'] = window.shade = function () {
-    var tmpHtml = arguments[0] === undefined ? '' : arguments[0];
+        initialContent = _utilFragmentFromString2['default'](el.innerHTML);
+        el.innerHTML = tmpHtml;
   
-    tmpHtml = tmpHtml.toString().trim();
-    return function (el) {
-      var oldHtml;
+        _apiBindings2['default'].forEach(function (binding) {
+          binding(el, initialContent);
+        });
   
-      if (typeof el === 'string') {
-        el = _utilFragmentFromString2['default'](el).children[0];
-      }
+        return el;
+      };
+    }
   
-      oldHtml = el.innerHTML;
-      el.innerHTML = tmpHtml;
-      _contentSetUp2['default'](el);
-      _contentSet2['default'](el, oldHtml);
+    define.bind = _apiBind2['default'];
+    define.bindings = _apiBindings2['default'];
+    define.listen = _apiListen2['default'];
+    define.notify = _apiNotify2['default'];
+    define.prop = _utilPropProxy2['default'];
   
-      return el;
-    };
-  };
+    define.bind('input[name][type="checkbox"]', _bindingChecked2['default']);
+    define.bind('content, [data-content]', _bindingContent2['default']);
+    define.bind('link[rel="property"]', _bindingLink2['default']);
+    define.bind('input[name][type="text"]', _bindingName2['default']);
+    define.bind('[text]', _bindingText2['default']);
   
+    return define;
+  }
+  
+  exports['default'] = window.shade = shade;
   module.exports = exports['default'];
   
   return module.exports;

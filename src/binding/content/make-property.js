@@ -2,6 +2,7 @@ import wrap from './wrap';
 
 export default function (content) {
   return {
+    configurable: true,
     get: function () {
       var name = content.__name;
       var nodes = wrap(content);
@@ -16,7 +17,6 @@ export default function (content) {
         nodes :
         nodes.nodes[0] || null;
     },
-
     set: function (value) {
       wrap(content).html = value;
     }
