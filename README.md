@@ -74,7 +74,7 @@ console.log(div);
 
 Shade supports the standard `select` attribute available to the `<content>` element as well as some custom ones that allow you to further describe the behaviour of your template.
 
-### `multiple`
+#### `multiple`
 
 - **Boolean**: Yes
 - **Default**: Not present
@@ -86,7 +86,7 @@ When not present, any content set will only have the first child applied to the 
 
 When present, All the content you've specified will be set. When you get, it will return a mutable collection of nodes. When changes are made to the collection they will automatically update the DOM. When changes are made to the DOM, they are immediately reflected in the collection.
 
-### `name`
+#### `name`
 
 - **Boolean**: No
 - **Default**: `textContent`
@@ -94,7 +94,7 @@ When present, All the content you've specified will be set. When you get, it wil
 
 The `name` attribute specifies the name of the accessor property on the templated node that will be used to get and set content. The behaviour of this property depends on whether or not the `multiple` attribute is present. The property will either return you a `DOMNode` or a mutable collection.
 
-### `select`
+#### `select`
 
 - **Boolean**: No
 - **Default**: `*`
@@ -108,71 +108,70 @@ When you have a `<content multiple>` element and you get the content from it, it
 
 ### Properties
 
-#### `all`
-
 Returns a raw array of the nodes in the collection.
+
+#### `html`
+
+Gets or sets the HTML of the collection. The HTML you pass in can be anything.
 
 #### `length`
 
-Returns the length of the collection.
+Gets the length of the collection.
+
+#### `text`
+
+Gets or sets the text content of the collection. The text content you pass in can be anything.
 
 ### Methods
 
-#### `append (nodeNodesOrHtml)`
+#### `accept (node, callback)`
 
-Appends a node, nodes or HTML to the end of the collection.
+If `node` can be added to the collection `callback` is fired. The first argument to `callback` is `node`.
+
+#### `append (anything)`
+
+Appends valid DOM to the collection.
 
 #### `at`
 
 Returns the node at the specified index.
 
-#### `clear`
+#### `contains (node)`
 
-Removes all items in the collection.
-
-#### `content (node)`
-
-Clears the collection and appends the specified content to it.
+Returns whether or not the specified node is contained in the collection.
 
 #### `each (fn)`
 
-Executes `fn` for each element in the collection passing in the node as the first argument and index as the second.
+Same as calling `forEach` on an array.
+
+#### `find (query)`
+
+Filters the nodes using `query` and returns an array of the filtered nodes. `query` can be an object of key / value pairs or a function. If an object, the keys will be used to match properties on each element to the specified value. If a function, this behaves the same as calling `filter()` on an array.
 
 #### `index (node)`
 
-Returns the index of the specified node.
+Same as calling `indexOf` on an array.
 
 #### `insert (nodeNodesOrHtml, at)`
 
 Inserts a node, nodes or HTML at the specified index.
 
+#### `map (fn)`
+
+Same as calling `map()` on an array.
+
 #### `prepend (nodeNodesOrHtml)`
 
 Appends a node, nodes or HTML to the collection.
 
-#### `remove (nodeNodesOrIndicies)`
+#### `reduce (fn, initialValue)`
 
-Removes the node or nodes from the collection.
+Same as calling `reduce()` on an array.
 
-## Todo list example
+#### `remove (nodeOrIndex)`
 
-```js
-var todoList = shade(`
-  <h2><content>My todo list</content></h2>
-  <ul>
-    <content name="items" select="li" multiple>
-      <li><em>You've nothing todo. Chill!</em></li>
-    </content>
-  </ul>
-`);
+Removes the node
 
-var todoItem = shade(`
-  <content>Do something</content>
-  <button type="button">&times;</button>
-`);
+#### `removeAll`
 
-var stuff = todoList('<section>Stuff I need to do</section>');
-stuff.items
-  .append(todoItem('<li>Get milk</li>'))
-  .append(todoItem('<li>Get bacon</li>'));
-```
+Removes all items.
