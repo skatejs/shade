@@ -1,4 +1,4 @@
-import apiNotify from '../../api/notify';
+import eventNotify from '../../event/notify';
 import findNodesBetween from '../../util/find-nodes-between';
 import fragmentFromAnything from '../../util/fragment-from-anything';
 import fragmentFromCollection from '../../util/fragment-from-collection';
@@ -17,6 +17,10 @@ export default function (content) {
     return findNodesBetween(content.__startNode, content.__stopNode);
   }
 
+  function getFilteredNodes () {
+    return content.__initialised ? [] : getAllNodes();
+  }
+
   function removeDefaultNodes () {
     if (content.__initialised) {
       content.__initialised = false;
@@ -27,18 +31,12 @@ export default function (content) {
   }
 
   function notify () {
-    apiNotify(content.__name)(content.__element);
+    eventNotify(content.__element, content.__name);
   }
 
   return {
-    get elements () {
-      return this.nodes.filter(function (node) {
-        return node.nodeType === 1;
-      });
-    },
-
     get html () {
-      return this.nodes.reduce(function (prev, curr) {
+      return getFilteredNodes().reduce(function (prev, curr) {
         return prev + curr.outerHTML;
       }, '');
     },
@@ -48,15 +46,11 @@ export default function (content) {
     },
 
     get length () {
-      return this.nodes.length;
-    },
-
-    get nodes () {
-      return content.__initialised ? [] : getAllNodes();
+      return getFilteredNodes().length;
     },
 
     get text () {
-      return this.nodes.reduce(function (prev, curr) {
+      return getFilteredNodes().reduce(function (prev, curr) {
         return prev + curr.textContent;
       }, '');
     },
@@ -91,8 +85,16 @@ export default function (content) {
       });
     },
 
+    at: function (index) {
+      return getFilteredNodes()[index];
+    },
+
     contains: function (node) {
       return content.__startNode.parentNode === node.parentNode;
+    },
+
+    each: function (fn) {
+      return getFilteredNodes().forEach(fn);
     },
 
     find: function (query) {
@@ -105,19 +107,27 @@ export default function (content) {
         };
       }
 
-      return this.nodes.filter(query);
+      return getFilteredNodes().filter(query);
+    },
+
+    index: function (node) {
+      return getFilteredNodes().indexOf(node);
     },
 
     insert: function (node, at) {
-      var reference = this.nodes[at] || content.__stopNode;
+      var reference = getFilteredNodes()[at] || content.__stopNode;
       return this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
         notify();
       });
     },
 
+    map: function (fn) {
+      return getFilteredNodes().map(fn);
+    },
+
     prepend: function (node) {
-      var reference = this.nodes[0] || content.__stopNode;
+      var reference = getFilteredNodes()[0] || content.__stopNode;
       this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
         notify();
@@ -125,9 +135,13 @@ export default function (content) {
       return this;
     },
 
+    reduce: function (fn, initialValue) {
+      return getFilteredNodes().reduce(fn, initialValue);
+    },
+
     remove: function (node) {
       if (typeof node === 'number') {
-        node = this.nodes[node];
+        node = getFilteredNodes()[node];
       }
 
       if (this.contains(node)) {
@@ -135,7 +149,7 @@ export default function (content) {
         notify();
       }
 
-      if (!this.nodes.length) {
+      if (!getFilteredNodes().length) {
         addDefaultNodes();
       }
 
@@ -143,7 +157,7 @@ export default function (content) {
     },
 
     removeAll: function () {
-      this.nodes.forEach(function (node) {
+      getFilteredNodes().forEach(function (node) {
         node.parentNode.removeChild(node);
         notify();
       });

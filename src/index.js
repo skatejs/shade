@@ -2,15 +2,13 @@ import apiBind from './api/bind';
 import apiBindings from './api/bindings';
 import apiListen from './api/listen';
 import apiNotify from './api/notify';
-import utilPropProxy from './util/prop-proxy';
 import bindingChecked from './binding/checked';
 import bindingContent from './binding/content';
-import bindingLink from './binding/link';
 import bindingName from './binding/name';
 import bindingText from './binding/text';
 import fragmentFromString from './util/fragment-from-string';
 
-function shade (bindings = shade.bindings) {
+function shade () {
   function define (tmpHtml = '') {
     tmpHtml = tmpHtml.toString().trim();
     return function (el) {
@@ -35,11 +33,9 @@ function shade (bindings = shade.bindings) {
   define.bindings = apiBindings;
   define.listen = apiListen;
   define.notify = apiNotify;
-  define.prop = utilPropProxy;
 
   define.bind('input[name][type="checkbox"]', bindingChecked);
-  define.bind('content, [data-content]', bindingContent);
-  define.bind('link[rel="property"]', bindingLink);
+  define.bind('content, [content]', bindingContent);
   define.bind('input[name][type="text"]', bindingName);
   define.bind('[text]', bindingText);
 
