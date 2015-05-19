@@ -172,6 +172,47 @@ __5ad1b0ebf0a4d70a2e8fa66fe6603e0a = (function () {
   return module.exports;
 }).call(this);
 
+// src/event/notify.js
+__9e17e38b814ce7a14057738b49b5d7ac = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _dispatch = __5ad1b0ebf0a4d70a2e8fa66fe6603e0a;
+  
+  var _dispatch2 = _interopRequireDefault(_dispatch);
+  
+  var _constants = __cb00d40c73a7150c328f8a7d3932a029;
+  
+  exports['default'] = function (el, name) {
+    var opts = {
+      bubbles: false,
+      cancellable: false,
+      detail: {
+        name: name,
+        value: el[name]
+      }
+    };
+  
+    _dispatch2['default'](el, _constants.PROPERTY_EVENT_NAME, opts);
+  
+    if (opts.detail.name) {
+      _dispatch2['default'](el, '' + _constants.PROPERTY_EVENT_NAME + '.' + opts.detail.name, opts);
+    }
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
 // src/api/notify.js
 __9fc7a49b416f05fbbc3c65c580d002a2 = (function () {
   var module = {
@@ -185,29 +226,44 @@ __9fc7a49b416f05fbbc3c65c580d002a2 = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _eventDispatch = __5ad1b0ebf0a4d70a2e8fa66fe6603e0a;
+  var _eventNotify = __9e17e38b814ce7a14057738b49b5d7ac;
   
-  var _eventDispatch2 = _interopRequireDefault(_eventDispatch);
-  
-  var _constants = __cb00d40c73a7150c328f8a7d3932a029;
+  var _eventNotify2 = _interopRequireDefault(_eventNotify);
   
   exports['default'] = function (name) {
     return function (el) {
-      var opts = {
-        bubbles: false,
-        cancellable: false,
-        detail: {
-          name: name,
-          value: el[name]
-        }
-      };
-  
-      _eventDispatch2['default'](el, _constants.PROPERTY_EVENT_NAME, opts);
-  
-      if (opts.detail.name) {
-        _eventDispatch2['default'](el, '' + _constants.PROPERTY_EVENT_NAME + '.' + opts.detail.name, opts);
-      }
+      _eventNotify2['default'](el, name);
     };
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/parse-args.js
+__8f8edeaa6f5d357c5d853d81d6c6186a = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  var regexArgComments = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+  var regexArgNames = /([^\s,]+)/g;
+  
+  exports['default'] = function (func) {
+    var fnStr = func.toString().replace(regexArgComments, '');
+  
+    var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(regexArgNames);
+  
+    if (result === null) {
+      result = [];
+    }
+  
+    return result;
   };
   
   module.exports = exports['default'];
@@ -228,23 +284,42 @@ __0126d3be88e859a7360a53615c8c95d9 = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
   
-  var _apiNotify2 = _interopRequireDefault(_apiNotify);
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _eventNotify = __9e17e38b814ce7a14057738b49b5d7ac;
+  
+  var _eventNotify2 = _interopRequireDefault(_eventNotify);
+  
+  var _parseArgs = __8f8edeaa6f5d357c5d853d81d6c6186a;
+  
+  var _parseArgs2 = _interopRequireDefault(_parseArgs);
   
   exports['default'] = function (el, name) {
     var descriptor = Object.getOwnPropertyDescriptor(el.constructor.prototype, name);
+    var links = [];
     var value;
   
     if (descriptor && !descriptor.configurable) {
       return;
     }
   
+    if (descriptor && descriptor.get) {
+      links = _parseArgs2['default'](descriptor.get);
+      links.forEach(function (link) {
+        _apiListen2['default'](el, link, _eventNotify2['default'].bind(null, el, name));
+      });
+    }
+  
     return Object.defineProperty(el, name, {
       configurable: true,
       get: function get() {
+        var that = this;
         if (descriptor && descriptor.get) {
-          return descriptor.get.call(this);
+          return descriptor.get.apply(this, links.map(function (link) {
+            return that[link];
+          }));
         } else {
           return value;
         }
@@ -256,7 +331,7 @@ __0126d3be88e859a7360a53615c8c95d9 = (function () {
           value = newValue;
         }
   
-        _apiNotify2['default'](name)(this);
+        _eventNotify2['default'](this, name);
       }
     });
   };
@@ -568,9 +643,9 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
   
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
   
-  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
+  var _eventNotify = __9e17e38b814ce7a14057738b49b5d7ac;
   
-  var _apiNotify2 = _interopRequireDefault(_apiNotify);
+  var _eventNotify2 = _interopRequireDefault(_eventNotify);
   
   var _utilFindNodesBetween = __f80bd0af0b10c72626d8bdce00313b6e;
   
@@ -601,6 +676,10 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       return _utilFindNodesBetween2['default'](content.__startNode, content.__stopNode);
     }
   
+    function getFilteredNodes() {
+      return content.__initialised ? [] : getAllNodes();
+    }
+  
     function removeDefaultNodes() {
       if (content.__initialised) {
         content.__initialised = false;
@@ -611,7 +690,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
     }
   
     function notify() {
-      _apiNotify2['default'](content.__name)(content.__element);
+      _eventNotify2['default'](content.__element, content.__name);
     }
   
     return Object.defineProperties({
@@ -642,8 +721,16 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
         });
       },
   
+      at: function at(index) {
+        return getFilteredNodes()[index];
+      },
+  
       contains: function contains(node) {
         return content.__startNode.parentNode === node.parentNode;
+      },
+  
+      each: function each(fn) {
+        return getFilteredNodes().forEach(fn);
       },
   
       find: function find(query) {
@@ -658,19 +745,27 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
           })();
         }
   
-        return this.nodes.filter(query);
+        return getFilteredNodes().filter(query);
+      },
+  
+      index: function index(node) {
+        return getFilteredNodes().indexOf(node);
       },
   
       insert: function insert(node, at) {
-        var reference = this.nodes[at] || content.__stopNode;
+        var reference = getFilteredNodes()[at] || content.__stopNode;
         return this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
           notify();
         });
       },
   
+      map: function map(fn) {
+        return getFilteredNodes().map(fn);
+      },
+  
       prepend: function prepend(node) {
-        var reference = this.nodes[0] || content.__stopNode;
+        var reference = getFilteredNodes()[0] || content.__stopNode;
         this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
           notify();
@@ -678,9 +773,13 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
         return this;
       },
   
+      reduce: function reduce(fn, initialValue) {
+        return getFilteredNodes().reduce(fn, initialValue);
+      },
+  
       remove: function remove(node) {
         if (typeof node === 'number') {
-          node = this.nodes[node];
+          node = getFilteredNodes()[node];
         }
   
         if (this.contains(node)) {
@@ -688,7 +787,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
           notify();
         }
   
-        if (!this.nodes.length) {
+        if (!getFilteredNodes().length) {
           addDefaultNodes();
         }
   
@@ -696,7 +795,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
   
       removeAll: function removeAll() {
-        this.nodes.forEach(function (node) {
+        getFilteredNodes().forEach(function (node) {
           node.parentNode.removeChild(node);
           notify();
         });
@@ -704,18 +803,9 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
         return this;
       }
     }, {
-      elements: {
-        get: function () {
-          return this.nodes.filter(function (node) {
-            return node.nodeType === 1;
-          });
-        },
-        configurable: true,
-        enumerable: true
-      },
       html: {
         get: function () {
-          return this.nodes.reduce(function (prev, curr) {
+          return getFilteredNodes().reduce(function (prev, curr) {
             return prev + curr.outerHTML;
           }, '');
         },
@@ -727,21 +817,14 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
       length: {
         get: function () {
-          return this.nodes.length;
-        },
-        configurable: true,
-        enumerable: true
-      },
-      nodes: {
-        get: function () {
-          return content.__initialised ? [] : getAllNodes();
+          return getFilteredNodes().length;
         },
         configurable: true,
         enumerable: true
       },
       text: {
         get: function () {
-          return this.nodes.reduce(function (prev, curr) {
+          return getFilteredNodes().reduce(function (prev, curr) {
             return prev + curr.textContent;
           }, '');
         },
@@ -861,43 +944,6 @@ __af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
   return module.exports;
 }).call(this);
 
-// src/binding/link.js
-__e3dbb566478a82ee62dcd14dd28f894e = (function () {
-  var module = {
-    exports: {}
-  };
-  var exports = module.exports;
-  
-  Object.defineProperty(exports, '__esModule', {
-    value: true
-  });
-  
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-  
-  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
-  
-  var _apiListen2 = _interopRequireDefault(_apiListen);
-  
-  var _apiNotify = __9fc7a49b416f05fbbc3c65c580d002a2;
-  
-  var _apiNotify2 = _interopRequireDefault(_apiNotify);
-  
-  exports['default'] = function (el, target) {
-    var src = target.getAttribute('src');
-    var dests = target.getAttribute('dest').split(' ');
-  
-    _apiListen2['default'](el, src, function () {
-      dests.forEach(function (dest) {
-        _apiNotify2['default'](dest)(el);
-      });
-    });
-  };
-  
-  module.exports = exports['default'];
-  
-  return module.exports;
-}).call(this);
-
 // src/binding/name.js
 __8d354ccbec8214a9b6149f90c1d3600c = (function () {
   var module = {
@@ -995,10 +1041,8 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     "./api/bindings": __7cd43f6452e9eab84438a4ad6025b3e3,
     "./api/listen": __c5dd6f8f59a03e0df7bce873c1a6aef8,
     "./api/notify": __9fc7a49b416f05fbbc3c65c580d002a2,
-    "./util/prop-proxy": __0126d3be88e859a7360a53615c8c95d9,
     "./binding/checked": __4771c5f22e51fe701a9946317a626d3b,
     "./binding/content": __af4e672e7be6cdbb17637f84ccfe1cf9,
-    "./binding/link": __e3dbb566478a82ee62dcd14dd28f894e,
     "./binding/name": __8d354ccbec8214a9b6149f90c1d3600c,
     "./binding/text": __6d77b901264b93f69dbd0ef3ea8503dc,
     "./util/fragment-from-string": __75288c9eae43be4f69a605d574814320
@@ -1055,10 +1099,6 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   var _apiNotify2 = _interopRequireDefault(_apiNotify);
   
-  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
-  
-  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
-  
   var _bindingChecked = __4771c5f22e51fe701a9946317a626d3b;
   
   var _bindingChecked2 = _interopRequireDefault(_bindingChecked);
@@ -1066,10 +1106,6 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   var _bindingContent = __af4e672e7be6cdbb17637f84ccfe1cf9;
   
   var _bindingContent2 = _interopRequireDefault(_bindingContent);
-  
-  var _bindingLink = __e3dbb566478a82ee62dcd14dd28f894e;
-  
-  var _bindingLink2 = _interopRequireDefault(_bindingLink);
   
   var _bindingName = __8d354ccbec8214a9b6149f90c1d3600c;
   
@@ -1084,8 +1120,6 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
   
   function shade() {
-    var bindings = arguments[0] === undefined ? shade.bindings : arguments[0];
-  
     function define() {
       var tmpHtml = arguments[0] === undefined ? '' : arguments[0];
   
@@ -1112,11 +1146,9 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     define.bindings = _apiBindings2['default'];
     define.listen = _apiListen2['default'];
     define.notify = _apiNotify2['default'];
-    define.prop = _utilPropProxy2['default'];
   
     define.bind('input[name][type="checkbox"]', _bindingChecked2['default']);
-    define.bind('content, [data-content]', _bindingContent2['default']);
-    define.bind('link[rel="property"]', _bindingLink2['default']);
+    define.bind('content, [content]', _bindingContent2['default']);
     define.bind('input[name][type="text"]', _bindingName2['default']);
     define.bind('[text]', _bindingText2['default']);
   
