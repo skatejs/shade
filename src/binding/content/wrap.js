@@ -17,10 +17,6 @@ export default function (content) {
     return findNodesBetween(content.__startNode, content.__stopNode);
   }
 
-  function getFilteredNodes () {
-    return content.__initialised ? [] : getAllNodes();
-  }
-
   function removeDefaultNodes () {
     if (content.__initialised) {
       content.__initialised = false;
@@ -36,7 +32,7 @@ export default function (content) {
 
   return {
     get html () {
-      return getFilteredNodes().reduce(function (prev, curr) {
+      return this.nodes.reduce(function (prev, curr) {
         return prev + curr.outerHTML;
       }, '');
     },
@@ -46,11 +42,15 @@ export default function (content) {
     },
 
     get length () {
-      return getFilteredNodes().length;
+      return this.nodes.length;
+    },
+
+    get nodes () {
+      return content.__initialised ? [] : getAllNodes();
     },
 
     get text () {
-      return getFilteredNodes().reduce(function (prev, curr) {
+      return this.nodes.reduce(function (prev, curr) {
         return prev + curr.textContent;
       }, '');
     },
@@ -86,7 +86,7 @@ export default function (content) {
     },
 
     at: function (index) {
-      return getFilteredNodes()[index];
+      return this.nodes[index];
     },
 
     contains: function (node) {
@@ -94,7 +94,7 @@ export default function (content) {
     },
 
     each: function (fn) {
-      return getFilteredNodes().forEach(fn);
+      return this.nodes.forEach(fn);
     },
 
     find: function (query) {
@@ -107,15 +107,15 @@ export default function (content) {
         };
       }
 
-      return getFilteredNodes().filter(query);
+      return this.nodes.filter(query);
     },
 
     index: function (node) {
-      return getFilteredNodes().indexOf(node);
+      return this.nodes.indexOf(node);
     },
 
     insert: function (node, at) {
-      var reference = getFilteredNodes()[at] || content.__stopNode;
+      var reference = this.nodes[at] || content.__stopNode;
       return this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
         notify();
@@ -123,11 +123,11 @@ export default function (content) {
     },
 
     map: function (fn) {
-      return getFilteredNodes().map(fn);
+      return this.nodes.map(fn);
     },
 
     prepend: function (node) {
-      var reference = getFilteredNodes()[0] || content.__stopNode;
+      var reference = this.nodes[0] || content.__stopNode;
       this.accept(node, function (node) {
         reference.parentNode.insertBefore(node, reference);
         notify();
@@ -136,12 +136,12 @@ export default function (content) {
     },
 
     reduce: function (fn, initialValue) {
-      return getFilteredNodes().reduce(fn, initialValue);
+      return this.nodes.reduce(fn, initialValue);
     },
 
     remove: function (node) {
       if (typeof node === 'number') {
-        node = getFilteredNodes()[node];
+        node = this.nodes[node];
       }
 
       if (this.contains(node)) {
@@ -149,7 +149,7 @@ export default function (content) {
         notify();
       }
 
-      if (!getFilteredNodes().length) {
+      if (!this.nodes.length) {
         addDefaultNodes();
       }
 
@@ -157,7 +157,7 @@ export default function (content) {
     },
 
     removeAll: function () {
-      getFilteredNodes().forEach(function (node) {
+      this.nodes.forEach(function (node) {
         node.parentNode.removeChild(node);
         notify();
       });
