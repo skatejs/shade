@@ -1,5 +1,6 @@
 import { DEFAULT_CONTENT_NAME } from '../constants';
 import makeProperty from './content/make-property';
+import trim from '../util/trim';
 import wrap from './content/wrap';
 
 export default function (el, target, initialContent) {
@@ -8,8 +9,10 @@ export default function (el, target, initialContent) {
   var startNode = document.createComment('');
   var stopNode = document.createComment('');
 
+  trim(target);
+
   // Cache data to refer to in the wrapper.
-  target.__default = target.innerHTML.trim();
+  target.__default = target.childNodes;
   target.__element = el;
   target.__initialised = false;
   target.__name = name;
