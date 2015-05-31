@@ -5,7 +5,7 @@ import utilParseArgs from './parse-args';
 export default function (el, name) {
   var descriptor = Object.getOwnPropertyDescriptor(el.constructor.prototype, name);
   var links = [];
-  var value;
+  var value = el.getAttribute(name);
 
   if (descriptor && !descriptor.configurable) {
     return;

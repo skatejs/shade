@@ -299,7 +299,7 @@ __0126d3be88e859a7360a53615c8c95d9 = (function () {
   exports['default'] = function (el, name) {
     var descriptor = Object.getOwnPropertyDescriptor(el.constructor.prototype, name);
     var links = [];
-    var value;
+    var value = el.getAttribute(name);
   
     if (descriptor && !descriptor.configurable) {
       return;
@@ -676,10 +676,6 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       return _utilFindNodesBetween2['default'](content.__startNode, content.__stopNode);
     }
   
-    function getFilteredNodes() {
-      return content.__initialised ? [] : getAllNodes();
-    }
-  
     function removeDefaultNodes() {
       if (content.__initialised) {
         content.__initialised = false;
@@ -722,7 +718,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
   
       at: function at(index) {
-        return getFilteredNodes()[index];
+        return this.nodes[index];
       },
   
       contains: function contains(node) {
@@ -730,7 +726,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
   
       each: function each(fn) {
-        return getFilteredNodes().forEach(fn);
+        return this.nodes.forEach(fn);
       },
   
       find: function find(query) {
@@ -745,15 +741,15 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
           })();
         }
   
-        return getFilteredNodes().filter(query);
+        return this.nodes.filter(query);
       },
   
       index: function index(node) {
-        return getFilteredNodes().indexOf(node);
+        return this.nodes.indexOf(node);
       },
   
       insert: function insert(node, at) {
-        var reference = getFilteredNodes()[at] || content.__stopNode;
+        var reference = this.nodes[at] || content.__stopNode;
         return this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
           notify();
@@ -761,11 +757,11 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
   
       map: function map(fn) {
-        return getFilteredNodes().map(fn);
+        return this.nodes.map(fn);
       },
   
       prepend: function prepend(node) {
-        var reference = getFilteredNodes()[0] || content.__stopNode;
+        var reference = this.nodes[0] || content.__stopNode;
         this.accept(node, function (node) {
           reference.parentNode.insertBefore(node, reference);
           notify();
@@ -774,12 +770,12 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
   
       reduce: function reduce(fn, initialValue) {
-        return getFilteredNodes().reduce(fn, initialValue);
+        return this.nodes.reduce(fn, initialValue);
       },
   
       remove: function remove(node) {
         if (typeof node === 'number') {
-          node = getFilteredNodes()[node];
+          node = this.nodes[node];
         }
   
         if (this.contains(node)) {
@@ -787,7 +783,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
           notify();
         }
   
-        if (!getFilteredNodes().length) {
+        if (!this.nodes.length) {
           addDefaultNodes();
         }
   
@@ -795,7 +791,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
   
       removeAll: function removeAll() {
-        getFilteredNodes().forEach(function (node) {
+        this.nodes.forEach(function (node) {
           node.parentNode.removeChild(node);
           notify();
         });
@@ -805,7 +801,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
     }, {
       html: {
         get: function () {
-          return getFilteredNodes().reduce(function (prev, curr) {
+          return this.nodes.reduce(function (prev, curr) {
             return prev + curr.outerHTML;
           }, '');
         },
@@ -817,14 +813,21 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
       length: {
         get: function () {
-          return getFilteredNodes().length;
+          return this.nodes.length;
+        },
+        configurable: true,
+        enumerable: true
+      },
+      nodes: {
+        get: function () {
+          return content.__initialised ? [] : getAllNodes();
         },
         configurable: true,
         enumerable: true
       },
       text: {
         get: function () {
-          return getFilteredNodes().reduce(function (prev, curr) {
+          return this.nodes.reduce(function (prev, curr) {
             return prev + curr.textContent;
           }, '');
         },
@@ -944,6 +947,48 @@ __af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
   return module.exports;
 }).call(this);
 
+// src/binding/if.js
+__84f84240c34e77faaa9ac017033fc8f4 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
+  
+  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
+  
+  exports['default'] = function (el, target) {
+    var name = target.getAttribute('name');
+    var parent = target.parentNode;
+    var placeholder = document.createComment('');
+  
+    _utilPropProxy2['default'](el, name);
+    parent.insertBefore(placeholder, target);
+    _apiListen2['default'](el, name, function () {
+      if (el[name] && !target.parentNode) {
+        parent.insertBefore(target, placeholder);
+      } else if (target.parentNode) {
+        parent.removeChild(target);
+      }
+    });
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
 // src/binding/name.js
 __8d354ccbec8214a9b6149f90c1d3600c = (function () {
   var module = {
@@ -1043,6 +1088,7 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     "./api/notify": __9fc7a49b416f05fbbc3c65c580d002a2,
     "./binding/checked": __4771c5f22e51fe701a9946317a626d3b,
     "./binding/content": __af4e672e7be6cdbb17637f84ccfe1cf9,
+    "./binding/if": __84f84240c34e77faaa9ac017033fc8f4,
     "./binding/name": __8d354ccbec8214a9b6149f90c1d3600c,
     "./binding/text": __6d77b901264b93f69dbd0ef3ea8503dc,
     "./util/fragment-from-string": __75288c9eae43be4f69a605d574814320
@@ -1107,6 +1153,10 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   var _bindingContent2 = _interopRequireDefault(_bindingContent);
   
+  var _bindingIf = __84f84240c34e77faaa9ac017033fc8f4;
+  
+  var _bindingIf2 = _interopRequireDefault(_bindingIf);
+  
   var _bindingName = __8d354ccbec8214a9b6149f90c1d3600c;
   
   var _bindingName2 = _interopRequireDefault(_bindingName);
@@ -1149,6 +1199,7 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
     define.bind('input[name][type="checkbox"]', _bindingChecked2['default']);
     define.bind('content, [content]', _bindingContent2['default']);
+    define.bind('[if]', _bindingIf2['default']);
     define.bind('input[name][type="text"]', _bindingName2['default']);
     define.bind('[text]', _bindingText2['default']);
   
