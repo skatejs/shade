@@ -5,6 +5,8 @@ __7cd43f6452e9eab84438a4ad6025b3e3 = (function () {
   };
   var exports = module.exports;
   
+  "use strict";
+  
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -20,6 +22,8 @@ __e0d18491916c36edcd801fda020cbb64 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  "use strict";
   
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -41,6 +45,8 @@ __ee71b6efe56580e3b0576e6146bf20af = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -57,7 +63,7 @@ __ee71b6efe56580e3b0576e6146bf20af = (function () {
   
   exports['default'] = function (selector, fn) {
     _bindings2['default'].push(function (el, initialContent) {
-      _utilFind2['default'](el, selector).forEach(function (target) {
+      (0, _utilFind2['default'])(el, selector).forEach(function (target) {
         fn(el, target, initialContent);
       });
     });
@@ -77,6 +83,8 @@ __cb00d40c73a7150c328f8a7d3932a029 = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -94,6 +102,8 @@ __c5dd6f8f59a03e0df7bce873c1a6aef8 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -126,6 +136,8 @@ __04e6a92dbc5b4950b19ebc85c5615cd3 = (function () {
   };
   var exports = module.exports;
   
+  "use strict";
+  
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -153,6 +165,8 @@ __5ad1b0ebf0a4d70a2e8fa66fe6603e0a = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -164,7 +178,7 @@ __5ad1b0ebf0a4d70a2e8fa66fe6603e0a = (function () {
   var _event2 = _interopRequireDefault(_event);
   
   exports['default'] = function (element, name, opts) {
-    return element.dispatchEvent(_event2['default'](name, opts));
+    return element.dispatchEvent((0, _event2['default'])(name, opts));
   };
   
   module.exports = exports['default'];
@@ -178,6 +192,8 @@ __9e17e38b814ce7a14057738b49b5d7ac = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -201,10 +217,10 @@ __9e17e38b814ce7a14057738b49b5d7ac = (function () {
       }
     };
   
-    _dispatch2['default'](el, _constants.PROPERTY_EVENT_NAME, opts);
+    (0, _dispatch2['default'])(el, _constants.PROPERTY_EVENT_NAME, opts);
   
     if (opts.detail.name) {
-      _dispatch2['default'](el, '' + _constants.PROPERTY_EVENT_NAME + '.' + opts.detail.name, opts);
+      (0, _dispatch2['default'])(el, '' + _constants.PROPERTY_EVENT_NAME + '.' + opts.detail.name, opts);
     }
   };
   
@@ -220,6 +236,8 @@ __9fc7a49b416f05fbbc3c65c580d002a2 = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -232,7 +250,7 @@ __9fc7a49b416f05fbbc3c65c580d002a2 = (function () {
   
   exports['default'] = function (name) {
     return function (el) {
-      _eventNotify2['default'](el, name);
+      (0, _eventNotify2['default'])(el, name);
     };
   };
   
@@ -247,6 +265,8 @@ __8f8edeaa6f5d357c5d853d81d6c6186a = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -278,6 +298,8 @@ __0126d3be88e859a7360a53615c8c95d9 = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -306,9 +328,9 @@ __0126d3be88e859a7360a53615c8c95d9 = (function () {
     }
   
     if (descriptor && descriptor.get) {
-      links = _parseArgs2['default'](descriptor.get);
+      links = (0, _parseArgs2['default'])(descriptor.get);
       links.forEach(function (link) {
-        _apiListen2['default'](el, link, _eventNotify2['default'].bind(null, el, name));
+        (0, _apiListen2['default'])(el, link, _eventNotify2['default'].bind(null, el, name));
       });
     }
   
@@ -331,8 +353,48 @@ __0126d3be88e859a7360a53615c8c95d9 = (function () {
           value = newValue;
         }
   
-        _eventNotify2['default'](this, name);
+        (0, _eventNotify2['default'])(this, name);
       }
+    });
+  };
+  
+  module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/binding/attr.js
+__c396280bdc430d9ea922dfd50fb78272 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  'use strict';
+  
+  Object.defineProperty(exports, '__esModule', {
+    value: true
+  });
+  
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+  
+  var _apiListen = __c5dd6f8f59a03e0df7bce873c1a6aef8;
+  
+  var _apiListen2 = _interopRequireDefault(_apiListen);
+  
+  var _utilPropProxy = __0126d3be88e859a7360a53615c8c95d9;
+  
+  var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
+  
+  exports['default'] = function (el, target) {
+    target.getAttribute('attr').split(' ').forEach(function (part) {
+      var parts = part.split(':');
+      var attrName = parts[0];
+      var propName = parts[1] || attrName;
+      (0, _utilPropProxy2['default'])(el, propName);
+      (0, _apiListen2['default'])(el, propName, function () {
+        return target.setAttribute(attrName, el[propName]);
+      });
     });
   };
   
@@ -347,6 +409,8 @@ __6ec2aa33e9ae4e76d44cc9de43847b64 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  "use strict";
   
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -371,6 +435,8 @@ __4771c5f22e51fe701a9946317a626d3b = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -391,17 +457,13 @@ __4771c5f22e51fe701a9946317a626d3b = (function () {
   
   exports['default'] = function (el, target) {
     var name = target.getAttribute('name');
-  
-    _utilPropProxy2['default'](el, name);
-  
-    _apiListen2['default'](el, name, function () {
-      target.checked = !!el.checked;
+    (0, _utilPropProxy2['default'])(el, name);
+    (0, _apiListen2['default'])(el, name, function () {
+      return target.checked = !!el.checked;
     });
-  
-    _eventListen2['default'](target, 'change', function () {
-      el[name] = target.checked;
+    (0, _eventListen2['default'])(target, 'change', function () {
+      return el[name] = target.checked;
     });
-  
     el[name] = target.checked;
   };
   
@@ -416,6 +478,8 @@ __f80bd0af0b10c72626d8bdce00313b6e = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  "use strict";
   
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -460,6 +524,8 @@ __30b400647c92b587f3d7e75db182c98e = (function () {
   };
   var exports = module.exports;
   
+  "use strict";
+  
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -486,6 +552,8 @@ __dc8ac56fe453d355e4f05d4b7918bf1e = (function () {
   };
   var exports = module.exports;
   
+  "use strict";
+  
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -509,6 +577,8 @@ __75288c9eae43be4f69a605d574814320 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -556,7 +626,7 @@ __75288c9eae43be4f69a605d574814320 = (function () {
   exports['default'] = function (dom) {
     var par = resolveCorrectDomParent(dom);
     par.innerHTML = dom;
-    return _fragmentFromCollection2['default'](par.childNodes);
+    return (0, _fragmentFromCollection2['default'])(par.childNodes);
   };
   
   module.exports = exports['default'];
@@ -570,6 +640,8 @@ __5a306df716eb2212ff834894672bc372 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -600,7 +672,7 @@ __5a306df716eb2212ff834894672bc372 = (function () {
     }
   
     if (typeof item === 'string') {
-      return _fragmentFromString2['default'](item);
+      return (0, _fragmentFromString2['default'])(item);
     }
   
     if (item instanceof DocumentFragment) {
@@ -608,11 +680,11 @@ __5a306df716eb2212ff834894672bc372 = (function () {
     }
   
     if (item instanceof Node) {
-      return _fragmentFromNode2['default'](item);
+      return (0, _fragmentFromNode2['default'])(item);
     }
   
     if (item instanceof NodeList) {
-      return _fragmentFromCollection2['default'](item);
+      return (0, _fragmentFromCollection2['default'])(item);
     }
   
     if (typeof item.length === 'number') {
@@ -637,6 +709,8 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -659,21 +733,17 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
   
   var _utilFragmentFromCollection2 = _interopRequireDefault(_utilFragmentFromCollection);
   
-  var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
-  
-  var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
-  
   exports['default'] = function (content) {
     function addDefaultNodes() {
       if (!content.__initialised) {
         content.__initialised = true;
         var reference = content.__stopNode;
-        reference.parentNode.insertBefore(_utilFragmentFromString2['default'](content.__default), reference);
+        reference.parentNode.insertBefore((0, _utilFragmentFromCollection2['default'])(content.__default), reference);
       }
     }
   
     function getAllNodes() {
-      return _utilFindNodesBetween2['default'](content.__startNode, content.__stopNode);
+      return (0, _utilFindNodesBetween2['default'])(content.__startNode, content.__stopNode);
     }
   
     function removeDefaultNodes() {
@@ -686,17 +756,26 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
     }
   
     function notify() {
-      _eventNotify2['default'](content.__element, content.__name);
+      (0, _eventNotify2['default'])(content.__element, content.__name);
     }
   
     return Object.defineProperties({
   
       accept: function accept(node, callback) {
-        node = _utilFragmentFromAnything2['default'](node);
+        node = (0, _utilFragmentFromAnything2['default'])(node);
         var selector = content.getAttribute('select');
+        var wrap = content.getAttribute('wrap');
   
         if (selector) {
-          node = _utilFragmentFromCollection2['default'](node.querySelectorAll(selector));
+          node = (0, _utilFragmentFromCollection2['default'])(node.querySelectorAll(selector));
+        }
+  
+        if (wrap) {
+          for (var a = 0; a < node.childNodes.length; a++) {
+            var wrapper = document.createElement('li');
+            wrapper.appendChild(node.childNodes[a]);
+            node.insertBefore(wrapper, node.childNodes[a]);
+          }
         }
   
         if (node.childNodes.length) {
@@ -820,7 +899,7 @@ __e3571fb8bc72b68f952ecdfea6c7ba29 = (function () {
       },
       nodes: {
         get: function () {
-          return content.__initialised ? [] : getAllNodes();
+          return getAllNodes();
         },
         configurable: true,
         enumerable: true
@@ -852,6 +931,8 @@ __3b41741c587b0717ffbe410dee595b40 = (function () {
   };
   var exports = module.exports;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -867,7 +948,7 @@ __3b41741c587b0717ffbe410dee595b40 = (function () {
       configurable: true,
       get: function get() {
         var name = content.__name;
-        var nodes = _wrap2['default'](content);
+        var nodes = (0, _wrap2['default'])(content);
   
         if (name === 'textContent') {
           return nodes.text;
@@ -878,12 +959,39 @@ __3b41741c587b0717ffbe410dee595b40 = (function () {
         return content.hasAttribute('multiple') ? nodes : nodes.nodes[0] || null;
       },
       set: function set(value) {
-        _wrap2['default'](content).html = value;
+        (0, _wrap2['default'])(content)[content.__name === 'textContent' ? 'text' : 'html'] = value;
       }
     };
   };
   
   module.exports = exports['default'];
+  
+  return module.exports;
+}).call(this);
+
+// src/util/trim.js
+__8961b6c8f9d26dccd972732c4985f8c9 = (function () {
+  var module = {
+    exports: {}
+  };
+  var exports = module.exports;
+  
+  "use strict";
+  
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  
+  exports["default"] = function (elem) {
+    for (var a = elem.childNodes.length - 1; a > -1; a--) {
+      var child = elem.childNodes[a];
+      if (child.nodeType === 3 && child.textContent.match(/^\s*$/)) {
+        elem.removeChild(child);
+      }
+    }
+  };
+  
+  module.exports = exports["default"];
   
   return module.exports;
 }).call(this);
@@ -894,6 +1002,8 @@ __af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -907,6 +1017,10 @@ __af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
   
   var _contentMakeProperty2 = _interopRequireDefault(_contentMakeProperty);
   
+  var _utilTrim = __8961b6c8f9d26dccd972732c4985f8c9;
+  
+  var _utilTrim2 = _interopRequireDefault(_utilTrim);
+  
   var _contentWrap = __e3571fb8bc72b68f952ecdfea6c7ba29;
   
   var _contentWrap2 = _interopRequireDefault(_contentWrap);
@@ -917,8 +1031,10 @@ __af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
     var startNode = document.createComment('');
     var stopNode = document.createComment('');
   
+    (0, _utilTrim2['default'])(target);
+  
     // Cache data to refer to in the wrapper.
-    target.__default = target.innerHTML.trim();
+    target.__default = target.childNodes;
     target.__element = el;
     target.__initialised = false;
     target.__name = name;
@@ -936,10 +1052,10 @@ __af4e672e7be6cdbb17637f84ccfe1cf9 = (function () {
       target.appendChild(stopNode);
     }
   
-    Object.defineProperty(el, name, _contentMakeProperty2['default'](target));
+    Object.defineProperty(el, name, (0, _contentMakeProperty2['default'])(target));
   
     // Initialise.
-    _contentWrap2['default'](target).html = initialContent;
+    (0, _contentWrap2['default'])(target).html = initialContent;
   };
   
   module.exports = exports['default'];
@@ -953,6 +1069,8 @@ __84f84240c34e77faaa9ac017033fc8f4 = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -969,13 +1087,13 @@ __84f84240c34e77faaa9ac017033fc8f4 = (function () {
   var _utilPropProxy2 = _interopRequireDefault(_utilPropProxy);
   
   exports['default'] = function (el, target) {
-    var name = target.getAttribute('name');
+    var name = target.getAttribute('if');
     var parent = target.parentNode;
     var placeholder = document.createComment('');
   
-    _utilPropProxy2['default'](el, name);
+    (0, _utilPropProxy2['default'])(el, name);
     parent.insertBefore(placeholder, target);
-    _apiListen2['default'](el, name, function () {
+    (0, _apiListen2['default'])(el, name, function () {
       if (el[name] && !target.parentNode) {
         parent.insertBefore(target, placeholder);
       } else if (target.parentNode) {
@@ -995,6 +1113,8 @@ __8d354ccbec8214a9b6149f90c1d3600c = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -1016,17 +1136,13 @@ __8d354ccbec8214a9b6149f90c1d3600c = (function () {
   
   exports['default'] = function (el, target) {
     var name = target.getAttribute('name');
-  
-    _utilPropProxy2['default'](el, name);
-  
-    _apiListen2['default'](el, name, function () {
-      target.value = el[name];
+    (0, _utilPropProxy2['default'])(el, name);
+    (0, _apiListen2['default'])(el, name, function () {
+      return target.value = el[name];
     });
-  
-    _eventListen2['default'](el, ['change', 'keyup'], function () {
-      el[name] = target.value;
+    (0, _eventListen2['default'])(el, ['change', 'keyup'], function () {
+      return el[name] = target.value;
     });
-  
     el[name] = target.value;
   };
   
@@ -1041,6 +1157,8 @@ __6d77b901264b93f69dbd0ef3ea8503dc = (function () {
     exports: {}
   };
   var exports = module.exports;
+  
+  'use strict';
   
   Object.defineProperty(exports, '__esModule', {
     value: true
@@ -1058,13 +1176,10 @@ __6d77b901264b93f69dbd0ef3ea8503dc = (function () {
   
   exports['default'] = function (el, target) {
     var name = target.getAttribute('text');
-  
-    _utilPropProxy2['default'](el, name);
-  
-    _apiListen2['default'](el, name, function (e) {
-      target.textContent = e.detail.value;
+    (0, _utilPropProxy2['default'])(el, name);
+    (0, _apiListen2['default'])(el, name, function (e) {
+      return target.textContent = e.detail.value;
     });
-  
     target.textContent = el[name];
   };
   
@@ -1086,11 +1201,13 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     "./api/bindings": __7cd43f6452e9eab84438a4ad6025b3e3,
     "./api/listen": __c5dd6f8f59a03e0df7bce873c1a6aef8,
     "./api/notify": __9fc7a49b416f05fbbc3c65c580d002a2,
+    "./binding/attr": __c396280bdc430d9ea922dfd50fb78272,
     "./binding/checked": __4771c5f22e51fe701a9946317a626d3b,
     "./binding/content": __af4e672e7be6cdbb17637f84ccfe1cf9,
     "./binding/if": __84f84240c34e77faaa9ac017033fc8f4,
     "./binding/name": __8d354ccbec8214a9b6149f90c1d3600c,
     "./binding/text": __6d77b901264b93f69dbd0ef3ea8503dc,
+    "./util/fragment-from-collection": __30b400647c92b587f3d7e75db182c98e,
     "./util/fragment-from-string": __75288c9eae43be4f69a605d574814320
   };
   var define = function defineReplacement(name, deps, func) {
@@ -1123,6 +1240,8 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   };
   define.amd = true;
   
+  'use strict';
+  
   Object.defineProperty(exports, '__esModule', {
     value: true
   });
@@ -1145,6 +1264,10 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   var _apiNotify2 = _interopRequireDefault(_apiNotify);
   
+  var _bindingAttr = __c396280bdc430d9ea922dfd50fb78272;
+  
+  var _bindingAttr2 = _interopRequireDefault(_bindingAttr);
+  
   var _bindingChecked = __4771c5f22e51fe701a9946317a626d3b;
   
   var _bindingChecked2 = _interopRequireDefault(_bindingChecked);
@@ -1165,11 +1288,15 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
   
   var _bindingText2 = _interopRequireDefault(_bindingText);
   
+  var _utilFragmentFromCollection = __30b400647c92b587f3d7e75db182c98e;
+  
+  var _utilFragmentFromCollection2 = _interopRequireDefault(_utilFragmentFromCollection);
+  
   var _utilFragmentFromString = __75288c9eae43be4f69a605d574814320;
   
   var _utilFragmentFromString2 = _interopRequireDefault(_utilFragmentFromString);
   
-  function shade() {
+  function create() {
     function define() {
       var tmpHtml = arguments[0] === undefined ? '' : arguments[0];
   
@@ -1178,10 +1305,10 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
         var initialContent;
   
         if (typeof el === 'string') {
-          el = _utilFragmentFromString2['default'](el).children[0];
+          el = (0, _utilFragmentFromString2['default'])(el).children[0];
         }
   
-        initialContent = _utilFragmentFromString2['default'](el.innerHTML);
+        initialContent = (0, _utilFragmentFromCollection2['default'])(el.childNodes);
         el.innerHTML = tmpHtml;
   
         _apiBindings2['default'].forEach(function (binding) {
@@ -1197,6 +1324,7 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     define.listen = _apiListen2['default'];
     define.notify = _apiNotify2['default'];
   
+    define.bind('[attr]', _bindingAttr2['default']);
     define.bind('input[name][type="checkbox"]', _bindingChecked2['default']);
     define.bind('content, [content]', _bindingContent2['default']);
     define.bind('[if]', _bindingIf2['default']);
@@ -1206,6 +1334,8 @@ __dff62dc5a802abe34646b4f484fc6f3f = (function () {
     return define;
   }
   
+  var shade = create();
+  shade.create = create;
   exports['default'] = window.shade = shade;
   module.exports = exports['default'];
   
