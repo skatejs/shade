@@ -18,7 +18,7 @@ export default function (content) {
         nodes.nodes[0] || null;
     },
     set: function (value) {
-      wrap(content).html = value;
+      wrap(content)[content.__name === 'textContent' ? 'text' : 'html'] = value;
     }
   };
 }
