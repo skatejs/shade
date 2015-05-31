@@ -2,14 +2,13 @@ import eventNotify from '../../event/notify';
 import findNodesBetween from '../../util/find-nodes-between';
 import fragmentFromAnything from '../../util/fragment-from-anything';
 import fragmentFromCollection from '../../util/fragment-from-collection';
-import fragmentFromString from '../../util/fragment-from-string';
 
 export default function (content) {
   function addDefaultNodes () {
     if (!content.__initialised) {
       content.__initialised = true;
       let reference = content.__stopNode;
-      reference.parentNode.insertBefore(fragmentFromString(content.__default), reference);
+      reference.parentNode.insertBefore(fragmentFromCollection(content.__default), reference);
     }
   }
 
@@ -46,7 +45,7 @@ export default function (content) {
     },
 
     get nodes () {
-      return content.__initialised ? [] : getAllNodes();
+      return getAllNodes();
     },
 
     get text () {
@@ -62,9 +61,18 @@ export default function (content) {
     accept: function (node, callback) {
       node = fragmentFromAnything(node);
       var selector = content.getAttribute('select');
+      var wrap = content.getAttribute('wrap');
 
       if (selector) {
         node = fragmentFromCollection(node.querySelectorAll(selector));
+      }
+
+      if (wrap) {
+        for (let a = 0; a < node.childNodes.length; a++) {
+          let wrapper = document.createElement('li');
+          wrapper.appendChild(node.childNodes[a]);
+          node.insertBefore(wrapper, node.childNodes[a]);
+        }
       }
 
       if (node.childNodes.length) {
