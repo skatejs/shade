@@ -7,6 +7,7 @@ import bindingChecked from './binding/checked';
 import bindingContent from './binding/content';
 import bindingIf from './binding/if';
 import bindingName from './binding/name';
+import bindingOn from './binding/on';
 import bindingText from './binding/text';
 import fragmentFromCollection from './util/fragment-from-collection';
 import fragmentFromString from './util/fragment-from-string';
@@ -38,10 +39,11 @@ function create () {
   define.notify = apiNotify;
 
   define.bind('[attr]', bindingAttr);
-  define.bind('input[name][type="checkbox"]', bindingChecked);
+  define.bind('[name][type="checkbox"]', bindingChecked);
   define.bind('content, [content]', bindingContent);
   define.bind('[if]', bindingIf);
-  define.bind('input[name][type="text"]', bindingName);
+  define.bind('textarea[name], input[type="text"][name]', bindingName);
+  define.bind('[on]', bindingOn);
   define.bind('[text]', bindingText);
 
   return define;
