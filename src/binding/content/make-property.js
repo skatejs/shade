@@ -4,7 +4,7 @@ export default function (content) {
   return {
     configurable: true,
     get: function () {
-      var name = content.getAttribute('name');
+      var name = content.getAttribute('name') || 'textContent';
       var nodes = wrap(content);
 
       if (name === 'textContent' || content.hasAttribute('text')) {

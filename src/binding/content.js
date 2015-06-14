@@ -1,4 +1,5 @@
 import { DEFAULT_CONTENT_NAME } from '../constants';
+import fragmentFromCollection from '../util/fragment-from-collection';
 import makeProperty from './content/make-property';
 import trim from '../util/trim';
 import wrap from './content/wrap';
@@ -12,7 +13,7 @@ export default function (el, target, initialContent) {
   trim(target);
 
   // Cache data to refer to in the wrapper.
-  target.__default = target.childNodes;
+  target.__default = fragmentFromCollection(target.childNodes);
   target.__element = el;
   target.__initialised = false;
   target.__name = name;

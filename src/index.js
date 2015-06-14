@@ -12,24 +12,20 @@ import bindingText from './binding/text';
 import fragmentFromCollection from './util/fragment-from-collection';
 import fragmentFromString from './util/fragment-from-string';
 
+var DocumentFragment = window.DocumentFragment;
+
 function create () {
   function define (tmpHtml = '') {
     tmpHtml = tmpHtml.toString().trim();
-    return function (el) {
+    return function (elem) {
       var initialContent;
-
-      if (typeof el === 'string') {
-        el = fragmentFromString(el).children[0];
-      }
-
-      initialContent = fragmentFromCollection(el.childNodes);
-      el.innerHTML = tmpHtml;
-
-      apiBindings.forEach(function (binding) {
-        binding(el, initialContent);
-      });
-
-      return el;
+      elem = elem || this;
+      elem = typeof elem === 'string' ? fragmentFromString(elem) : elem;
+      elem = elem instanceof DocumentFragment ? elem.children.item(0) : elem;
+      initialContent = fragmentFromCollection(elem.childNodes);
+      elem.innerHTML = tmpHtml;
+      apiBindings.forEach(binding => binding(elem, initialContent));
+      return elem;
     };
   }
 

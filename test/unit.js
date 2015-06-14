@@ -1,6 +1,6 @@
 import shade from '../src/index';
 
-var template = shade();
+var template = shade.create();
 
 describe('shade', function () {
   it('(String)', function () {

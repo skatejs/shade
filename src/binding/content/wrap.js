@@ -8,7 +8,7 @@ export default function (content) {
     if (!content.__initialised) {
       content.__initialised = true;
       let reference = content.__stopNode;
-      reference.parentNode.insertBefore(fragmentFromCollection(content.__default), reference);
+      reference.parentNode.insertBefore(content.__default.cloneNode(true), reference);
     }
   }
 
