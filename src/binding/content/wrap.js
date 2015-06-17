@@ -68,10 +68,10 @@ export default function (content) {
       }
 
       if (wrap) {
-        for (let a = 0; a < node.childNodes.length; a++) {
+        for (let a = 0; a < node.children.length; a++) {
           let wrapper = document.createElement('li');
-          wrapper.appendChild(node.childNodes[a]);
-          node.insertBefore(wrapper, node.childNodes[a]);
+          wrapper.appendChild(node.children[a]);
+          node.insertBefore(wrapper, node.children[a]);
         }
       }
 

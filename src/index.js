@@ -4,10 +4,13 @@ import apiListen from './api/listen';
 import apiNotify from './api/notify';
 import bindingAttr from './binding/attr';
 import bindingChecked from './binding/checked';
+import bindingClass from './binding/class';
 import bindingContent from './binding/content';
 import bindingIf from './binding/if';
+import bindingIfnot from './binding/ifnot';
 import bindingName from './binding/name';
 import bindingOn from './binding/on';
+import bindingStyle from './binding/style';
 import bindingText from './binding/text';
 import fragmentFromCollection from './util/fragment-from-collection';
 import fragmentFromString from './util/fragment-from-string';
@@ -38,8 +41,11 @@ function create () {
   define.bind('[name][type="checkbox"]', bindingChecked);
   define.bind('content, [content]', bindingContent);
   define.bind('[if]', bindingIf);
+  define.bind('[ifnot]', bindingIfnot);
   define.bind('textarea[name], input[type="text"][name]', bindingName);
   define.bind('[on]', bindingOn);
+  define.bind('[sh-class]', bindingClass);
+  define.bind('[sh-style]', bindingStyle);
   define.bind('[text]', bindingText);
 
   return define;

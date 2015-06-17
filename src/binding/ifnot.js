@@ -10,9 +10,9 @@ export default function (el, target) {
     }
 
     if (e.detail.newValue && !target.parentNode) {
-      parent.insertBefore(target, placeholder);
-    } else if (!e.detail.newValue && target.parentNode) {
       target.remove();
+    } else if (!e.detail.newValue && target.parentNode) {
+      parent.insertBefore(target, placeholder);
     }
   });
 }
