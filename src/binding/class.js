@@ -26,14 +26,14 @@ function classList (el) {
 export default function (el, target) {
   target.getAttribute('sh-class').split(' ').forEach(function (part) {
     var parts = part.split(':');
-    var attrName = parts[0];
-    var propName = parts[1] || attrName;
+    var propName = parts[0];
+    var className = parts[1];
 
-    function toggle (value) {
-      if (value) {
-        classList(target).add(attrName);
+    function toggle (newValue, oldValue) {
+      if (newValue) {
+        classList(target).add(className || newValue);
       } else {
-        classList(target).remove(attrName);
+        classList(target).remove(className || oldValue);
       }
     }
 
