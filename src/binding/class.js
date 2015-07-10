@@ -1,3 +1,6 @@
+import apiListen from '../api/listen';
+import utilPropProxy from '../util/prop-proxy';
+
 function classList (el) {
   return el.classList || (function () {
     function classNames () {
@@ -29,18 +32,18 @@ export default function (el, target) {
     var propName = parts[0];
     var className = parts[1];
 
-    function toggle (newValue, oldValue) {
-      if (newValue) {
-        classList(target).add(className || newValue);
+    function toggle (value) {
+      if (value) {
+        classList(target).add(className || value);
       } else {
-        classList(target).remove(className || oldValue);
+        classList(target).remove(className);
       }
     }
 
     toggle(el[propName]);
-    el.addEventListener('skate.property', function (e) {
-      if (propName !== e.detail.name) { return; }
-      toggle(e.detail.newValue);
+    utilPropProxy(el, propName);
+    apiListen(el, propName, function (e) {
+      toggle(e.detail.value);
     });
   });
 }

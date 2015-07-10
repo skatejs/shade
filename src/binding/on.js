@@ -3,8 +3,8 @@ import eventDispatch from '../event/dispatch';
 export default function (el, target) {
   target.getAttribute('on').split(' ').forEach(function (pair) {
     var handlerFunc;
-    var [ name, handlerName ] = pair.split(':');
-    handlerName = handlerName || 'handle' + (name[0].toUpperCase() + name.substring(1));
+    var [ propName, handlerName ] = pair.split(':');
+    handlerName = handlerName || 'handle' + (propName[0].toUpperCase() + propName.substring(1));
     handlerFunc = (el[handlerName] || function (e) {
       eventDispatch(this, handlerName, {
         bubbles: true,
@@ -12,7 +12,7 @@ export default function (el, target) {
       });
       e.preventDefault();
     }).bind(el);
-    target.addEventListener(name, function (e) {
+    target.addEventListener(propName, function (e) {
       e.delegateTarget = target;
       handlerFunc(e);
     });

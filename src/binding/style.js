@@ -1,3 +1,6 @@
+import apiListen from '../api/listen';
+import utilPropProxy from '../util/prop-proxy';
+
 function pxIfNumber (val) {
   return typeof val === 'number' ? val + 'px' : val;
 }
@@ -9,9 +12,9 @@ export default function (el, target) {
     var propName = parts[1] || attrName;
 
     target.style[attrName] = pxIfNumber(el[propName]);
-    el.addEventListener('skate.property', function (e) {
-      if (propName !== e.name) { return; }
-      target.style[attrName] = pxIfNumber(e.detail.newValue);
+    utilPropProxy(el, propName);
+    apiListen(el, propName, function (e) {
+      target.style[attrName] = pxIfNumber(e.detail.value);
     });
   });
 }

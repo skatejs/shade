@@ -2,8 +2,14 @@ import apiListen from '../api/listen';
 import eventNotify from '../event/notify';
 import utilParseArgs from './parse-args';
 
+var getDescriptor = Object.getOwnPropertyDescriptor;
+
+function resolveDescriptor (el, name) {
+  return getDescriptor(el, name);
+}
+
 export default function (el, name) {
-  var descriptor = Object.getOwnPropertyDescriptor(el.constructor.prototype, name);
+  var descriptor = resolveDescriptor(el, name);
   var links = [];
   var value = el.getAttribute(name);
 

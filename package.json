@@ -2,7 +2,7 @@
   "name": "shadejs",
   "version": "0.0.0",
   "description": "HTML Templating based on ShadowDOM concepts.",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "gulp test"
   },
