@@ -18,7 +18,7 @@ import fragmentFromString from './util/fragment-from-string';
 var DocumentFragment = window.DocumentFragment;
 
 function create () {
-  function define (tmpHtml = '') {
+  function template (tmpHtml = '') {
     tmpHtml = tmpHtml.toString().trim();
     return function (elem) {
       var initialContent;
@@ -32,23 +32,23 @@ function create () {
     };
   }
 
-  define.bind = apiBind;
-  define.bindings = apiBindings;
-  define.listen = apiListen;
-  define.notify = apiNotify;
+  template.bind = apiBind;
+  template.bindings = apiBindings;
+  template.listen = apiListen;
+  template.notify = apiNotify;
 
-  define.bind('[attr]', bindingAttr);
-  define.bind('[name][type="checkbox"]', bindingChecked);
-  define.bind('content, [content]', bindingContent);
-  define.bind('[if]', bindingIf);
-  define.bind('[ifnot]', bindingIfnot);
-  define.bind('textarea[name], input[type="text"][name]', bindingName);
-  define.bind('[on]', bindingOn);
-  define.bind('[sh-class]', bindingClass);
-  define.bind('[sh-style]', bindingStyle);
-  define.bind('[text]', bindingText);
+  template.bind('[attr]', bindingAttr);
+  template.bind('[name][type="checkbox"]', bindingChecked);
+  template.bind('content, [content]', bindingContent);
+  template.bind('[if]', bindingIf);
+  template.bind('[ifnot]', bindingIfnot);
+  template.bind('textarea[name], input[type="text"][name]', bindingName);
+  template.bind('[on]', bindingOn);
+  template.bind('[sh-class]', bindingClass);
+  template.bind('[sh-style]', bindingStyle);
+  template.bind('[text]', bindingText);
 
-  return define;
+  return template;
 }
 
 var shade = create();
