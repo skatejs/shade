@@ -1,3 +1,8 @@
+Deprecation Notice
+==================
+
+Shade was an exploration that never really worked out. We've started working on a [simpler solution](https://github.com/skatejs/named-slots/) that is a subset of the [latest Shadow DOM drafts](https://www.w3.org/TR/shadow-dom/). It's recommended to use that if you want a similar distrubution algorithm.
+
 ShadeJS
 =======
 
